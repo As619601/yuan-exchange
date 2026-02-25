@@ -33,17 +33,20 @@ export default function Navbar() {
           
 
           {/* Logo - ย่อขนาดเล็กน้อยในมือถือเพื่อไม่ให้เบียดปุ่ม */}
+          <Link href="/">
           <div className="flex-shrink-0 flex items-center">
             <span className="text-xl md:text-2xl font-black text-white tracking-tighter">YUAN</span>
             <span className="text-xl md:text-2xl font-black text-brand-yellow ml-1 tracking-tighter">EXCHANGE</span>
           </div>
+          </Link>
 
           {/* Menu - ซ่อนในมือถือ (Desktop Only) */}
           <div className="hidden md:flex space-x-8">
             <Link href="/" className="text-gray-300 hover:text-brand-yellow font-medium transition-colors">หน้าแรก</Link>
             <Link href="#services" className="text-gray-300 hover:text-brand-yellow font-medium transition-colors">บริการของเรา</Link>
             <Link href="#rates" className="text-gray-300 hover:text-brand-yellow font-medium transition-colors">เช็คเรทเงิน</Link>
-            <Link href="#contact" className="text-gray-300 hover:text-brand-yellow font-medium transition-colors">ติดต่อเรา</Link>
+            <Link href="/about" className="text-gray-300 hover:text-brand-yellow font-medium transition-colors">เกี่ยวกับเรา</Link>
+            <Link href="https://line.me/R/ti/p/@yuanexchange" className="text-gray-300 hover:text-brand-yellow font-medium transition-colors">ติดต่อเรา</Link>
           </div>
 
           {/* Contact Actions - ปรับแต่งเพื่อมือถือ */}

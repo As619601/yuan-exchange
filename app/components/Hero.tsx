@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import ExchangeCard from './ExchangeCard';
+import Link from 'next/link';
 
 export default function Hero() {
   const images = [
@@ -66,13 +67,24 @@ export default function Hero() {
             </p>
             
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-              <button className="bg-brand-yellow text-slate-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-yellow-400 transition transform hover:scale-105 shadow-xl">
-                เช็คเรทวันนี้
-              </button>
-              <button className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition">
-                ดูบริการทั้งหมด
-              </button>
-            </div>
+  {/* ปุ่มหลัก: เช็คเรทวันนี้ */}
+  <Link 
+    href="https://line.me/R/ti/p/@yuanexchange"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="bg-brand-yellow text-slate-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-yellow-400 transition transform hover:scale-105 shadow-xl inline-block"
+  >
+    เช็คเรทวันนี้
+  </Link>
+
+  {/* ปุ่มรอง: ดูบริการทั้งหมด (ถ้าปังจะทำหน้า About ก็เปลี่ยนลิงก์มาที่นี่ได้น่อ) */}
+  <Link 
+    href="/about" 
+    className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition inline-block text-center"
+  >
+    ดูบริการทั้งหมด
+  </Link>
+</div>
           </div>
 
           {/* ฝั่งขวา: เครื่องคิดเลข */}

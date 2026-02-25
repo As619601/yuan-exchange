@@ -12,7 +12,7 @@ export default function Home() {
       {/* 1. ส่วนแถบเมนูนำทาง  */}
       <Navbar />
 
-      {/* 2. ส่วนหัวเว็บ พร้อมเครื่องคิดเลขคำนวณเรทเงิน [cite: 14, 34] */}
+      {/* 2. ส่วนหัวเว็บ พร้อมเครื่องคิดเลขคำนวณเรทเงิน */}
       <Hero />
 
 
@@ -31,7 +31,7 @@ export default function Home() {
       {/* 6. ส่วนท้ายเว็บและข้อมูลติดต่อ  */}
       <Footer />
 
-      {/* ปุ่ม LINE ลอย (Floating Button) [cite: 95] */}
+      {/* ปุ่ม LINE ลอย (Floating Button)  */}
       <a 
         href="https://line.me/R/ti/p/@yuanexchange" 
         target="_blank" 
