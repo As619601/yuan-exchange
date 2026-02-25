@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+/* 1. Custom Theme Configuration สำหรับ v4 */
+/* ปังสามารถตั้งค่าสีแบรนด์ตรงนี้ เพื่อเรียกใช้ใน Tailwind ได้เลยค่ะ */
+@theme {
+  --color-brand-yellow: #facc15; /* สีเหลืองที่ปังใช้ */
+  --color-brand-blue: #1e40af;
+  
+  --font-kanit: "Kanit", sans-serif; /* ตัวอย่างถ้าปังจะใช้ฟอนต์ Kanit */
+
+  /* Animation ที่เราใส่ไว้ใน Hero Component */
+  --animate-fade-in: fade-in 1s ease-out forwards;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* 2. Base Styles - ตั้งค่าพื้นฐานให้หน้าเว็บ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-slate-900 text-white antialiased;
+    font-family: var(--font-kanit);
+  }
+
+  /* จัดการเรื่อง Scrollbar ให้ดูสวยขึ้น (แบบ Minimal) */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-900;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-700 rounded-full hover:bg-slate-600;
+  }
+}
+
+/* 3. Utility Classes - สำหรับพวก Glassmorphism ที่ปังชอบ */
+@layer utilities {
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-yellow to-yellow-200;
+  }
+}
