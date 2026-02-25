@@ -79,7 +79,7 @@ export default function Hero() {
 
   {/* ปุ่มรอง: ดูบริการทั้งหมด (ถ้าปังจะทำหน้า About ก็เปลี่ยนลิงก์มาที่นี่ได้น่อ) */}
   <Link 
-    href="/about" 
+    href="https://line.me/R/ti/p/@yuanexchange" 
     className="bg-white/10 backdrop-blur-md border border-white/30 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition inline-block text-center"
   >
     ดูบริการทั้งหมด
