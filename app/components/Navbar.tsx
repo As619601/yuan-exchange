@@ -28,7 +28,7 @@ export default function Navbar() {
 
   const navLinks = [
     { name: 'หน้าแรก', href: '/' },
-    { name: 'บริการของเรา', href: '#services' },
+    { name: 'บริการของเรา', href: '/service' },
     { name: 'เช็คเรทเงิน', href: '#rates' },
     { name: 'เกี่ยวกับเรา', href: '/about' },
     { name: 'ติดต่อเรา', href: 'https://line.me/R/ti/p/@yuanexchange' },
