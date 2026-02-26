@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Phone, Menu, X } from 'lucide-react'; // เพิ่ม Menu และ X (กากบาท)
+import Image from 'next/image';
 
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
@@ -37,7 +38,7 @@ export default function Navbar() {
   return (
     <nav className={`fixed w-full z-50 transition-transform duration-300 ${
       isVisible ? 'translate-y-0' : '-translate-y-full'
-    } bg-slate-900/80 backdrop-blur-xl border-b border-white/10 shadow-2xl`}>
+    } bg-slate-700/80 backdrop-blur-xl border-b border-white/10 shadow-2xl`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
 
@@ -52,12 +53,18 @@ export default function Navbar() {
           </div>
 
           {/* Logo */}
-          <Link href="/">
-            <div className="flex-shrink-0 flex items-center">
-              <span className="text-xl md:text-2xl font-black text-white tracking-tighter">YUAN</span>
-              <span className="text-xl md:text-2xl font-black text-brand-yellow ml-1 tracking-tighter">EXCHANGE</span>
-            </div>
-          </Link>
+          <Link href="/" className="flex items-center">
+  <Image 
+    src="/logo2.png"       
+    alt="Yuan Exchange Logo"
+    width={60}            
+    height={60}           
+    className="object-contain"
+    priority              // ใส่ไว้เพื่อให้โลโก้โหลดขึ้นมาทันที (LCP)
+  />
+  {/* <span className="font-black text-x3 text-white">YUAN</span> */}
+  <span className="font-black text-x3 text-brand-yellow">EXCHANGE</span>
+</Link>
 
           {/* Menu Desktop (เหมือนเดิม) */}
           <div className="hidden md:flex space-x-8">
