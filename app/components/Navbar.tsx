@@ -29,7 +29,7 @@ export default function Navbar() {
   const navLinks = [
     { name: 'หน้าแรก', href: '/' },
     { name: 'บริการของเรา', href: '/service' },
-    { name: 'เช็คเรทเงิน', href: '#rates' },
+    { name: 'เช็คเรทเงิน', href: '/rates' },
     { name: 'เกี่ยวกับเรา', href: '/about' },
     { name: 'ติดต่อเรา', href: 'https://line.me/R/ti/p/@yuanexchange' },
   ];
@@ -74,7 +74,7 @@ export default function Navbar() {
               <div className="bg-white/10 p-2.5 md:p-2 rounded-full border border-white/10">
                 <Phone className="w-5 h-5 md:w-4 md:h-4 text-brand-yellow" />
               </div>
-              <span className="hidden lg:inline text-sm">083-985-4714</span>
+              <span className="hidden lg:inline text-sm">083 985 4714</span>
             </a>
 
             <Link href="https://line.me/R/ti/p/@yuanexchange" className="bg-[#06C755] text-white p-2.5 md:px-5 md:py-2.5 rounded-full md:rounded-xl font-bold text-sm hover:brightness-110 transition-all shadow-lg shadow-green-500/20 flex items-center gap-2">
