@@ -55,12 +55,12 @@ export default function PromotionService() {
                   className="flex flex-col items-center gap-4 group cursor-pointer transition-all hover:-translate-y-3"
                 >
                   {/* 🚩 มากิขยายขนาดที่นี่น่อ: จอคอมปรับเป็น w-28 h-28 */}
-                  <div className="w-18 h-18 md:w-20 md:h-20 bg-white rounded-full border border-slate-100 shadow-sm flex items-center justify-center group-hover:border-blue-500 group-hover:shadow-xl group-hover:rotate-3 transition-all duration-300 overflow-hidden">
+                  <div className="w-18 h-18 md:w-28 md:h-28 bg-white rounded-full border border-slate-100 shadow-sm flex items-center justify-center group-hover:border-blue-500 group-hover:shadow-xl group-hover:rotate-3 transition-all duration-300 overflow-hidden">
                     <img 
                       src={item.icon} 
                       alt={item.name} 
                       /* 🚩 รูปข้างในก็ใหญ่ขึ้นตามน่อ */
-                      className="w-15 h-15 md:w-10 md:h-10 object-contain transition-transform group-hover:scale-110"
+                      className="w-15 h-15 md:w-20 md:h-20 object-contain transition-transform group-hover:scale-110"
                     />
                   </div>
                   <span className="text-[11px] md:text-sm font-black text-[#1a3a8a] text-center leading-tight group-hover:text-blue-600 transition-colors">

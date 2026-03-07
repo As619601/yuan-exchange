@@ -56,8 +56,7 @@ export default function PartnerSlider() {
           to { transform: translateX(-100%); }
         }
         .animate-marquee {
-          animation: marquee 30s linear infinite; /* 💡 ปรับเลข 30s ให้เร็วหรือช้าได้ตามใจปังน่อ */
-        }
+          animation: marquee 40s linear infinite; 
         /* หยุดสไลด์เมื่อเมาส์ชี้ เพื่อให้เจ้านายดูโลโก้ถนัดๆ */
         .flex:hover .animate-marquee {
           animation-play-state: paused;
