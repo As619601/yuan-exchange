@@ -23,7 +23,7 @@ export default function PartnerSlider() {
       </div>
 
       {/* 🪄 สไลด์แบบไร้รอยต่อ (Infinite Marquee) */}
-      <div className="flex overflow-hidden select-none [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]">
+      <div className="flex overflow-hidden select-none ">
         
         {/* Group 1: วิ่งหลัก */}
         <div className="flex shrink-0 items-center justify-around gap-20 min-w-full animate-marquee py-4">
