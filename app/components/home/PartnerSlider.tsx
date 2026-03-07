@@ -29,7 +29,7 @@ export default function PartnerSlider() {
               key={`p1-${index}`}
               src={partner.src} 
               alt={partner.name} 
-              className="h-10 md:h-14 w-auto object-contain transition-all duration-300 hover:scale-110 cursor-pointer"
+              className="h-20 md:h-16 w-auto object-contain transition-all duration-300 hover:scale-110 cursor-pointer"
             />
           ))}
         </div>
@@ -41,7 +41,7 @@ export default function PartnerSlider() {
               key={`p2-${index}`}
               src={partner.src} 
               alt={partner.name} 
-              className="h-10 md:h-14 w-auto object-contain transition-all duration-300 hover:scale-110 cursor-pointer"
+              className="h-20 md:h-16 w-auto object-contain transition-all duration-300 hover:scale-110 cursor-pointer"
             />
           ))}
         </div>
