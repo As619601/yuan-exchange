@@ -9,42 +9,39 @@ export default function PartnerSlider() {
     { name: '1688', src: '/images/1688.webp' },
   ];
 
-  // เบิ้ลอาเรย์ 3 ชุดเพื่อให้สไลด์ไหลยาวๆ เนียนกริ๊บ ไม่กระตุกน่อ
-  const displayPartners = [...partners, ...partners, ...partners];
-
+  // ไม่ต้องเบิ้ลเยอะน่อ เอาแค่ชุดเดียวพอ เดี๋ยวเราใช้ Marquee จัดการเอง
   return (
     <section className="py-12 bg-white overflow-hidden border-t border-gray-50 relative z-10">
       <div className="max-w-7xl mx-auto px-6 text-center mb-10">
         <h3 className="text-2xl md:text-3xl font-black text-[#1a3a8a] tracking-tight">
           พาร์ทเนอร์ของเรา
         </h3>
-        {/* เส้นใต้สวยๆ ที่ปังชอบ */}
         <div className="w-20 h-1.5 bg-blue-600 mx-auto mt-3 rounded-full animate-pulse" />
       </div>
 
-      {/* 🪄 สไลด์แบบไร้รอยต่อ (Infinite Marquee) */}
-      <div className="flex overflow-hidden select-none ">
+      {/* 🪄 Container หลัก */}
+      <div className="flex overflow-hidden select-none group">
         
-        {/* Group 1: วิ่งหลัก */}
-        <div className="flex shrink-0 items-center justify-around gap-20 min-w-full animate-marquee py-4">
-          {displayPartners.map((partner, index) => (
+        {/* 🚩 เทคนิคคือใช้ gap คงที่ และใส่ animation ชุดเดียวกันทั้ง 2 div */}
+        <div className="flex shrink-0 items-center gap-20 md:gap-32 animate-marquee py-4 pr-20 md:pr-32">
+          {partners.map((partner, index) => (
             <img 
               key={`p1-${index}`}
-              src={partner.src} // 🚩 คลีนแล้วน่อ ไม่มี Date.now() มาหลอน
+              src={partner.src} 
               alt={partner.name} 
-              className="h-12 md:h-16 w-auto object-contain transition-all duration-300 hover:scale-110 cursor-pointer"
+              className="h-10 md:h-14 w-auto object-contain transition-all duration-300 hover:scale-110 cursor-pointer"
             />
           ))}
         </div>
 
-        {/* Group 2: ตัวเชื่อมลูป (ซ่อนจาก Screen Reader เพื่อความถูกต้อง) */}
-        <div aria-hidden="true" className="flex shrink-0 items-center justify-around gap-20 min-w-full animate-marquee py-4">
-          {displayPartners.map((partner, index) => (
+        {/* 🚩 ชุดที่ 2 สำหรับรอยต่อ: ต้องเหมือนชุดแรกเป๊ะๆ ทั้ง gap และ padding */}
+        <div aria-hidden="true" className="flex shrink-0 items-center gap-20 md:gap-32 animate-marquee py-4 pr-20 md:pr-32">
+          {partners.map((partner, index) => (
             <img 
               key={`p2-${index}`}
               src={partner.src} 
               alt={partner.name} 
-              className="h-12 md:h-16 w-auto object-contain transition-all duration-300 hover:scale-110 cursor-pointer"
+              className="h-10 md:h-14 w-auto object-contain transition-all duration-300 hover:scale-110 cursor-pointer"
             />
           ))}
         </div>
@@ -56,9 +53,10 @@ export default function PartnerSlider() {
           to { transform: translateX(-100%); }
         }
         .animate-marquee {
-          animation: marquee 40s linear infinite; 
-        /* หยุดสไลด์เมื่อเมาส์ชี้ เพื่อให้เจ้านายดูโลโก้ถนัดๆ */
-        .flex:hover .animate-marquee {
+          animation: marquee 20s linear infinite;
+        }
+        /* หยุดเมื่อเมาส์ชี้ที่ container */
+        .group:hover .animate-marquee {
           animation-play-state: paused;
         }
       `}</style>
