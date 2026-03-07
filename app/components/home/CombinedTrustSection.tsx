@@ -113,15 +113,7 @@ export default function TrustSection() {
         </div>
       </div>
 
-      {/* 🏢 🚩 ส่วนที่หายไป: Bottom Partner Logos Bar กลับมาแล้วน่อ! */}
-      <div className="py-12 px-6 bg-white border-t border-gray-50">
-        <div className="max-w-7xl mx-auto flex flex-wrap justify-center lg:justify-between items-center gap-8 md:gap-16">
-          <img src="/images/Taobao.webp" alt="Taobao" className="h-8 md:h-12 object-contain hover:scale-105 transition-transform" />
-          <img src="/images/Tmall.webp" alt="Tmall" className="h-8 md:h-12 object-contain hover:scale-105 transition-transform" />
-          <img src="/images/Alipay.webp" alt="Alipay" className="h-8 md:h-12 object-contain hover:scale-105 transition-transform" />
-          <img src="/images/1688.webp" alt="1688" className="h-8 md:h-12 object-contain hover:scale-105 transition-transform" />
-        </div>
-      </div>
+      
     </section>
   );
 }

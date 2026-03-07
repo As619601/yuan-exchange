@@ -7,6 +7,7 @@ import PromotionService from './components/home/PromotionService';
 import OurServices from './components/home/OurServices';
 import CombinedTrustSection from './components/home/CombinedTrustSection';
 import Footer from './components/layout/Footer';
+import PartnerSlider from './components/home/PartnerSlider';
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
       <PromotionService />
       <OurServices />
       <CombinedTrustSection />
+      <PartnerSlider />
       <Footer />
 
       {/* 📱 🚩 Sticky Contact Buttons (ฉบับอัปเกรดโมชั่นโดยมากิจัง) */}
