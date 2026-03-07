@@ -1,0 +1,12 @@
+# netlify.toml
+
+[build]
+  # คำสั่งสำหรับ Build (ถ้าใช้ Next.js)
+  command = "npm run build"
+  
+  # โฟลเดอร์ที่ได้จากการ Build (Next.js คือ .next หรือออกทาง out น่อ)
+  publish = ".next"
+
+[[plugins]]
+  # ถ้าใช้ Next.js ต้องมีปลั๊กอินนี้เพื่อให้ระบบทำงานได้สมบูรณ์น่อ
+  package = "@netlify/plugin-nextjs"

@@ -1,58 +1,72 @@
 @import "tailwindcss";
 
-/* 1. Custom Theme Configuration สำหรับ v4 */
-/* ปังสามารถตั้งค่าสีแบรนด์ตรงนี้ เพื่อเรียกใช้ใน Tailwind ได้เลยค่ะ */
+/* 🎨 กำหนด Theme แบบ v4 */
 @theme {
-  --color-brand-yellow: #facc15; /* สีเหลืองที่ปังใช้ */
-  --color-brand-blue: #1e40af;
-  
-  --font-kanit: "Kanit", sans-serif; /* ตัวอย่างถ้าปังจะใช้ฟอนต์ Kanit */
-
-  /* Animation ที่เราใส่ไว้ใน Hero Component */
-  --animate-fade-in: fade-in 1s ease-out forwards;
-
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+  --color-primary-blue: #3366cc;
+  --color-dark-blue: #003192;
+  --radius-4xl: 40px;
+  --radius-5xl: 60px;
 }
 
-/* 2. Base Styles - ตั้งค่าพื้นฐานให้หน้าเว็บ */
+/* 🛡️ พื้นฐานและป้องกันหน้าจอโย้ */
 @layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-  
+  html,
   body {
-    @apply bg-slate-900 text-white antialiased;
-    font-family: var(--font-kanit);
+    max-width: 100vw;
+    overflow-x: hidden;
+    position: relative;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #ffffff;
+    color: #000000;
   }
 
-  /* จัดการเรื่อง Scrollbar ให้ดูสวยขึ้น (แบบ Minimal) */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    @apply bg-slate-900;
-  }
-  ::-webkit-scrollbar-thumb {
-    @apply bg-slate-700 rounded-full hover:bg-slate-600;
+  /* ซ่อนปุ่มลูกศรในช่อง Input ตัวเลข */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 }
 
-/* 3. Utility Classes - สำหรับพวก Glassmorphism ที่ปังชอบ */
+/* 🪄 Custom Utilities */
 @layer utilities {
-  .glass-card {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* 🚩 แก้จุดที่แตก: ใช้ CSS ปกติแทน @apply ที่มี !important */
+  .swiper-pagination-bullet {
+    transition: all 0.3s !important;
+  }
+
+  .swiper-pagination-bullet-active {
+    width: 2rem !important; /* ประมาณ 8 หรือ w-8 */
+    border-radius: 9999px !important;
+  }
+}
+
+/* 🎨 Reusable Components */
+@layer components {
+  .btn-primary {
+    background-color: var(--color-primary-blue);
+    color: white;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    transition: all 0.3s;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-yellow to-yellow-200;
+  .btn-primary:active {
+    transform: scale(0.95);
   }
 }
