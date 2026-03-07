@@ -9,7 +9,7 @@ export default function OurServices() {
     { id: 1, image: '/images/service-1.jpg', title: 'รีวิวบริการ' },
     { id: 2, image: '/images/service-2.jpg', title: 'รีวิวจากลูกค้า' },
     { id: 3, image: '/images/service-3.jpg', title: 'กำไรดีเพราะเรทถูก' },
-    { id: 4, image: '/images/service-4.jpg', title: 'ออกใบกำกับภาษี' },
+    { id: 4, image: '/images/service-4.jpg', title: 'รีวิวโอนเงิน' },
   ];
 
   return (

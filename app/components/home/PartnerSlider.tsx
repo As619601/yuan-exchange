@@ -9,63 +9,58 @@ export default function PartnerSlider() {
     { name: '1688', src: '/images/1688.webp' },
   ];
 
-  // เบิ้ลอาเรย์เพื่อให้สไลด์ไหลต่อเนื่องไม่สะดุดน่อ
-  const displayPartners = [...partners, ...partners];
+  // เบิ้ลอาเรย์ 3 ชุดเพื่อให้สไลด์ไหลยาวๆ เนียนกริ๊บ ไม่กระตุกน่อ
+  const displayPartners = [...partners, ...partners, ...partners];
 
   return (
-    <section className="py-5 bg-white overflow-hidden border-t border-gray-50 relative z-10">
+    <section className="py-12 bg-white overflow-hidden border-t border-gray-50 relative z-10">
       <div className="max-w-7xl mx-auto px-6 text-center mb-10">
-        <h3 className="text-2xl md:text-3xl font-black text-slate-800 tracking-tight">
+        <h3 className="text-2xl md:text-3xl font-black text-[#1a3a8a] tracking-tight">
           พาร์ทเนอร์ของเรา
         </h3>
+        {/* เส้นใต้สวยๆ ที่ปังชอบ */}
         <div className="w-20 h-1.5 bg-blue-600 mx-auto mt-3 rounded-full animate-pulse" />
       </div>
 
-      {/* 🪄 Container หลักสำหรับสไลด์ (ซ่อม CSS กาวให้ไหลต่อเนื่อง) */}
-      <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]">
+      {/* 🪄 สไลด์แบบไร้รอยต่อ (Infinite Marquee) */}
+      <div className="flex overflow-hidden select-none [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]">
         
-        {/* 🪄 ชุดที่หนึ่ง: วิ่งไหลไปเรื่อยๆ */}
-        <div className="flex items-center justify-center md:justify-start [&_img]:max-w-none animate-marquee py-4">
+        {/* Group 1: วิ่งหลัก */}
+        <div className="flex shrink-0 items-center justify-around gap-20 min-w-full animate-marquee py-4">
           {displayPartners.map((partner, index) => (
-            <div 
-              key={`p1-${index}`} 
-              className="mx-10 md:mx-20 flex items-center justify-center shrink-0"
-            >
-              <img 
-                src={`${partner.src}?v=${Date.now()}`} // 🚩 เติม ?v=Time เพื่อล้างแคชรูปภาพน่อปัง
-                alt={partner.name} 
-                /* 🚩 โชว์สีปกติ (ลบ grayscale/opacity ออก), ขยายใหญ่ขึ้นตามใจบอส */
-                className="h-12 md:h-20 w-auto object-contain transition-transform duration-300 hover:scale-110"
-              />
-            </div>
+            <img 
+              key={`p1-${index}`}
+              src={partner.src} // 🚩 คลีนแล้วน่อ ไม่มี Date.now() มาหลอน
+              alt={partner.name} 
+              className="h-12 md:h-16 w-auto object-contain transition-all duration-300 hover:scale-110 cursor-pointer"
+            />
           ))}
         </div>
 
-        {/* 🪄 ชุดที่สอง: วิ่งต่อท้ายลูป */}
-        <div className="flex items-center justify-center md:justify-start [&_img]:max-w-none animate-marquee py-4" aria-hidden="true">
+        {/* Group 2: ตัวเชื่อมลูป (ซ่อนจาก Screen Reader เพื่อความถูกต้อง) */}
+        <div aria-hidden="true" className="flex shrink-0 items-center justify-around gap-20 min-w-full animate-marquee py-4">
           {displayPartners.map((partner, index) => (
-            <div 
-              key={`p2-${index}`} 
-              className="mx-10 md:mx-20 flex items-center justify-center shrink-0"
-            >
-              <img 
-                src={`${partner.src}?v=${Date.now()}`} // 🚩 เติม ?v=Time เพื่อล้างแคชรูปภาพน่อปัง
-                alt={partner.name} 
-                className="h-12 md:h-20 w-auto object-contain transition-transform duration-300 hover:scale-110"
-              />
-            </div>
+            <img 
+              key={`p2-${index}`}
+              src={partner.src} 
+              alt={partner.name} 
+              className="h-12 md:h-16 w-auto object-contain transition-all duration-300 hover:scale-110 cursor-pointer"
+            />
           ))}
         </div>
       </div>
 
-      {/* 🪄 Maki's Magic CSS (ฉบับล้างแคช กาวให้ไหลต่อเนื่อง) */}
       <style jsx global>{`
         @keyframes marquee {
           from { transform: translateX(0); }
           to { transform: translateX(-100%); }
         }
         .animate-marquee {
-          animation: marquee 25s linear infinite; /* 💡 ปรับเวลาความเร็วตรงนี้ได้น่อน่อ */
+          animation: marquee 30s linear infinite; /* 💡 ปรับเลข 30s ให้เร็วหรือช้าได้ตามใจปังน่อ */
+        }
+        /* หยุดสไลด์เมื่อเมาส์ชี้ เพื่อให้เจ้านายดูโลโก้ถนัดๆ */
+        .flex:hover .animate-marquee {
+          animation-play-state: paused;
         }
       `}</style>
     </section>
