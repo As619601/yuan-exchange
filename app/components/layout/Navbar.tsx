@@ -7,12 +7,13 @@ import Image from 'next/image';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const lineLink = "https://line.me/R/ti/p/@yuanexchange"; // 🚩 มากิรวมลิงค์ไว้ที่เดียวให้แก้พอง่ายๆ น่อ
+  const facebookLink = "https://www.facebook.com/share/1D3fHYY9EX/"; // 🚩 มากิรวมลิงค์ไว้ที่เดียวให้แก้พอง่ายๆ น่อ
 
   const navLinks = [
     { name: 'หน้าแรก', href: '#' },
-    { name: 'บริการ', href: '#services' },
-    { name: 'โปรโมชั่น', href: '#promotions' },
-    { name: 'รีวิว', href: '#reviews' },
+    { name: 'บริการ', href: '#' },
+    { name: 'โปรโมชั่น', href: facebookLink },
+    { name: 'รีวิว', href: facebookLink },
     { name: 'ติดต่อเรา', href: lineLink },
   ];
 
@@ -20,8 +21,13 @@ export default function Navbar() {
     <nav className="fixed w-full z-[100] bg-[#0047ff] py-4 shadow-xl border-b border-white/10">
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         
-        {/* 🎡 Logo Section */}
-        <div className="flex items-center gap-3">
+        {/* 🎡 Logo Section: จิ้มแล้วไป www.เงินหยวน.com น่อ */}
+        <a 
+          href="https://www.เงินหยวน.com" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="flex items-center gap-3 group cursor-pointer transition-opacity hover:opacity-80"
+        >
           <div className="relative w-[180px] h-10 overflow-hidden flex items-center justify-center">
             <Image 
               src="/images/logo.webp" 
@@ -31,7 +37,7 @@ export default function Navbar() {
               priority 
             />
           </div>
-        </div>
+        </a>
 
         {/* 💻 Desktop Menu */}
         <div className="hidden md:flex items-center gap-10">

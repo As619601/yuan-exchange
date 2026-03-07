@@ -6,6 +6,7 @@ import { Phone, MessageCircle, MapPin } from 'lucide-react';
 export default function Footer() {
   const lineLink = "https://line.me/R/ti/p/@yuanexchange";
   const phoneNumber = "0839854714";
+  const facebookLink = "https://www.facebook.com/share/1D3fHYY9EX/";
 
   return (
     <footer className="bg-[#0a1d37] text-white pt-16 pb-10 px-6">
@@ -86,6 +87,18 @@ export default function Footer() {
                 </div>
                 <span className="opacity-70 font-bold underline group-hover:text-[#00d632] transition-all tracking-wide">
                   Line ID: @yuanexchange
+                </span>
+              </a>
+            </li>
+
+            {/* 🚩 ลิงค์ Facebook */}
+            <li className="flex items-center gap-3">
+              <a href={facebookLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group">
+                <div className="w-5 h-5 bg-[#3b82f6] group-hover:bg-[#00d632] rounded-full flex items-center justify-center transition-colors">
+                  <span className="text-[10px] font-bold text-white">FB</span>
+                </div>
+                <span className="opacity-70 font-bold underline group-hover:text-[#00d632] transition-all tracking-wide">
+                  Facebook: Yuan Exchange 
                 </span>
               </a>
             </li>
