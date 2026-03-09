@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Sans_Thai, Noto_Sans } from "next/font/google";
 import "./globals.css";
-// 🚩 จุดที่เพิ่ม: Import Script เข้ามาน่อ
 import Script from "next/script";
 
 const notoThai = Noto_Sans_Thai({
@@ -28,10 +27,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // 🚩 แก้ไข ID ตรงนี้ให้เป็นตัวล่าสุดน่อ
+  const PIXEL_ID = "1220673412943328";
+
   return (
     <html lang="th" className={`${notoThai.variable} ${notoSans.variable}`}>
       <head>
-        {/* 🚩 1. Meta Pixel Code (หลัก) */}
+        {/* 🚩 Meta Pixel Code (หลัก) */}
         <Script id="fb-pixel" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)
@@ -42,20 +44,21 @@ export default function RootLayout({
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '1203012408254334');
+            fbq('init', '${PIXEL_ID}');
             fbq('track', 'PageView');
           `}
         </Script>
       </head>
       <body className="font-[family-name:var(--font-noto-thai)] antialiased text-[#31537c] bg-[#f0f7ff] min-h-screen relative overflow-x-hidden">
         
-        {/* 🚩 2. Noscript สำหรับคนปิด JavaScript (ใส่ต้น body) */}
+        {/* 🚩 Noscript สำหรับเก็บตก (ใส่ต้น body ตามสูตร) */}
         <noscript>
           <img 
             height="1" 
             width="1" 
             style={{ display: 'none' }}
-            src="https://www.facebook.com/tr?id=1203012408254334&ev=PageView&noscript=1"
+            src={`https://www.facebook.com/tr?id=${PIXEL_ID}&ev=PageView&noscript=1`}
+            alt="fb-pixel"
           />
         </noscript>
 
