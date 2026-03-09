@@ -99,7 +99,7 @@ export default function TrustSection() {
                   {"★".repeat(rev.rating)}
                 </div>
                 <p className="text-[13px] leading-relaxed text-gray-600 font-medium flex-grow">
-                  "{rev.text}"
+                  `{rev.text}`
                 </p>
                 <div className="flex items-center gap-3 pt-4 border-t border-gray-100 mt-3">
                   <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-200 shrink-0">

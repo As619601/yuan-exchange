@@ -30,18 +30,18 @@ export default function HeroSection() {
 
           <h2 className="text-3xl md:text-5xl lg:text-6xl font-black leading-[1.2] md:leading-[1.15] break-words">
             แลกเงินหยวน โอนเงินไปจีน<br className="hidden md:block" />
-            <span className="text-white"> เรทดีที่สุด ปลอดภัย 100%</span>
+            <span className="text-white"> ครบวงจร จบทุกปัญหา </span>
           </h2>
 
           <p className="text-sm md:text-base max-w-lg mx-auto lg:mx-0 font-medium leading-relaxed">
-            บริการรวดเร็ว โปร่งใส ไม่มีค่าธรรมเนียมแอบแฝง อนุมัติไวใน 15 นาที 
+            บริการรวดเร็ว โปร่งใส ไม่มีค่าธรรมเนียมแอบแฝง  
             ตอบโจทย์ทั้งนักธุรกิจและบุคคลทั่วไป
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 text-[11px] md:text-xs font-bold pt-2">
-            <div className="flex items-center gap-2 justify-center"><CheckCircle2 size={14} className="text-red-400 shrink-0" /> เรทดีกว่าธนาคาร</div>
-            <div className="flex items-center gap-2 justify-center"><CheckCircle2 size={14} className="text-red-400 shrink-0" /> โอนไวใน 15 นาที</div>
-            <div className="flex items-center gap-2 justify-center"><CheckCircle2 size={14} className="text-red-400 shrink-0" /> ไม่มีค่าธรรมเนียม</div>
+            <div className="flex items-center gap-2 justify-center"><CheckCircle2 size={14} className="text-red-400 shrink-0" /> เรทถูกราคาดี แลกเงินไว้ใจเรา</div>
+            <div className="flex items-center gap-2 justify-center"><CheckCircle2 size={14} className="text-red-400 shrink-0" /> สะดวกรวดเร็ว มั่นใจ</div>
+            <div className="flex items-center gap-2 justify-center"><CheckCircle2 size={14} className="text-red-400 shrink-0" /> รับประกันทุกยอด</div>
           </div>
         </div>
 

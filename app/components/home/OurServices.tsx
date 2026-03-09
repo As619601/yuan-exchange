@@ -6,9 +6,9 @@ export default function OurServices() {
   const lineLink = "https://line.me/R/ti/p/@yuanexchange"; // 🚩 ลิงค์ไลน์เจ้าเก่าเจ้าเดิมน่อ
 
   const serviceCards = [
-    { id: 1, image: '/images/service-1.jpg', title: 'รีวิวบริการ' },
     { id: 2, image: '/images/service-2.jpg', title: 'รีวิวจากลูกค้า' },
     { id: 3, image: '/images/service-3.jpg', title: 'กำไรดีเพราะเรทถูก' },
+    { id: 1, image: '/images/service-1.jpg', title: 'รีวิวบริการ' },     
     { id: 4, image: '/images/service-4.jpg', title: 'รีวิวโอนเงิน' },
   ];
 
@@ -46,7 +46,7 @@ export default function OurServices() {
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                {/* 💡 มากิแถม Overlay จางๆ ตอน Hover ให้ดูน่ากดขึ้นน่อ */}
+                {/* 💡 มากิแถม Overlay จางๆ ตอน Hover  */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
               </div>
 

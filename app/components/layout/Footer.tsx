@@ -66,10 +66,7 @@ export default function Footer() {
         <div className="flex flex-col gap-6">
           <h4 className="text-lg font-black tracking-tight">ติดต่อเรา</h4>
           <ul className="flex flex-col gap-5 text-sm font-medium">
-            <li className="flex gap-3">
-              <MapPin size={20} className="text-[#3b82f6] shrink-0" />
-              <span className="opacity-70">123 ถนนรัชดาภิเษก แขวงดินแดง เขตดินแดง กรุงเทพฯ 10400</span>
-            </li>
+            
             
             {/* 🚩 ลิงค์เบอร์โทรศัพท์ */}
             <li className="flex items-center gap-3">

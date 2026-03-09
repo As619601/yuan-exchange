@@ -26,20 +26,18 @@ export default function Home() {
       <PartnerSlider />
       <Footer />
 
-      {/* 📱 🚩 Sticky Contact Buttons (ฉบับอัปเกรดโมชั่นโดยมากิจัง) */}
-      <div className="fixed right-6 bottom-10 z-[100] flex flex-col gap-6">
+      {/* 📱 🚩 Sticky Contact Buttons (ฉบับเน้นไอคอนใหญ่สะใจ โดยมากิจัง) */}
+      <div className="fixed right-6 bottom-10 z-[100] flex flex-col gap-0.1">
         
-        {/* 💚 ปุ่ม Line - เพิ่ม class 'animate-float' และ 'hover-bounce' */}
+        {/* 💚 ปุ่ม Line - เน้นไอคอนใหญ่เต็มวง */}
         <a 
           href="https://line.me/R/ti/p/@yuanexchange" 
           target="_blank" 
           rel="noopener noreferrer"
           className="group relative flex items-center justify-center w-20 h-20 md:w-24 md:h-24 transition-all duration-500 animate-float drop-shadow-2xl"
         >
-          {/* 🪄 วงแหวนกระจายตัว (Ripple Effect) */}
-          <div className="absolute inset-0 rounded-full bg-[#06c755] opacity-20 animate-ping-slow" />
-          
-          <div className="relative w-full h-full p-2 group-hover:scale-110 group-active:scale-90 transition-transform duration-300 ease-out"> 
+          {/* 🚩 ลบวงแหวนออก แล้วขยาย padding ให้ไอคอนใหญ่ขึ้น (p-0 หรือ p-1) */}
+          <div className="relative w-full h-full p-1 group-hover:scale-110 group-active:scale-95 transition-transform duration-300 ease-out"> 
             <Image 
               src="/icons/line.webp" 
               alt="Line Contact"
@@ -54,15 +52,13 @@ export default function Home() {
           </span>
         </a>
 
-        {/* 📞 ปุ่มโทร - เพิ่ม class 'animate-shake' ทุกๆ 5 วินาที */}
+        {/* 📞 ปุ่มโทร - เน้นไอคอนใหญ่สั่นเรียกแขก */}
         <a 
           href="tel:0839854714" 
           className="group relative flex items-center justify-center w-20 h-20 md:w-24 md:h-24 transition-all duration-500 animate-float-delayed drop-shadow-2xl"
         >
-          {/* 🪄 วงแหวนกระจายตัว (Ripple Effect) */}
-          <div className="absolute inset-0 rounded-full bg-blue-500 opacity-20 animate-ping-slow-delayed" />
-
-          <div className="relative w-full h-full p-3 group-hover:scale-110 group-active:scale-90 transition-transform duration-300 ease-out animate-shake-periodic"> 
+          {/* 🚩 ลบวงแหวนออก แล้วขยายไอคอนให้เต็มพื้นที่ */}
+          <div className="relative w-full h-full p-1 group-hover:scale-110 group-active:scale-95 transition-transform duration-300 ease-out animate-shake-periodic"> 
             <Image 
               src="/icons/phone.webp" 
               alt="Call Us"
@@ -78,9 +74,9 @@ export default function Home() {
         </a>
       </div>
 
-      {/* 🪄 Maki's Custom Animations */}
+      {/* 🪄 Maki's Clean Animations */}
       <style jsx global>{`
-        /* ลอยขึ้นลงนุ่มๆ */
+        /* ลอยขึ้นลงนุ่มๆ เหมือนเดิมน่อ */
         @keyframes float {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-15px); }
@@ -88,15 +84,7 @@ export default function Home() {
         .animate-float { animation: float 4s infinite ease-in-out; }
         .animate-float-delayed { animation: float 4s infinite ease-in-out 1s; }
 
-        /* วงแหวนกระจาย (Ping) แบบช้าๆ พรีเมียม */
-        @keyframes ping-slow {
-          0% { transform: scale(1); opacity: 0.4; }
-          100% { transform: scale(1.6); opacity: 0; }
-        }
-        .animate-ping-slow { animation: ping-slow 2s infinite ease-out; }
-        .animate-ping-slow-delayed { animation: ping-slow 2s infinite ease-out 1s; }
-
-        /* สั่นกระดิ่งแบบโทรศัพท์ (สั่นเป็นพักๆ) */
+        /* สั่นกระดิ่งแบบโทรศัพท์ (สั่นเป็นพักๆ) ให้รู้ว่ากดได้น่อ */
         @keyframes shake {
           0%, 90%, 100% { transform: rotate(0); }
           92% { transform: rotate(10deg); }
