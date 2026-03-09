@@ -26,8 +26,8 @@ export default function Home() {
       <PartnerSlider />
       <Footer />
 
-      {/* 📱 🚩 Sticky Contact Buttons (ฉบับเน้นไอคอนใหญ่สะใจ โดยมากิจัง) */}
-      <div className="fixed right-6 bottom-10 z-[100] flex flex-col gap-0.1">
+      {/* 📱 🚩 Sticky Contact Buttons (ฉบับชิดกันกริ๊บ โดยมากิจัง) */}
+      <div className="fixed right-6 bottom-10 z-[100] flex flex-col -space-y-2 md:-space-y-15">
         
         {/* 💚 ปุ่ม Line - เน้นไอคอนใหญ่เต็มวง */}
         <a 
