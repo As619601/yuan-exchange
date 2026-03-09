@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Noto_Sans_Thai, Noto_Sans } from "next/font/google";
 import "./globals.css";
-
+// 🚩 จุดที่เพิ่ม: Import Script เข้ามาน่อ
+import Script from "next/script";
 
 const notoThai = Noto_Sans_Thai({
   weight: ["300", "400", "500", "600", "700", "800", "900"],
@@ -28,14 +29,36 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    /* 🚩 จุดที่ 1: ใส่ font-variable ไว้ที่ html */
     <html lang="th" className={`${notoThai.variable} ${notoSans.variable}`}>
-      {/* 🚩 จุดที่ 2: ใน body ต้องระบุให้ Tailwind ใช้ Font Variable ที่เราตั้งไว้ 
-          โดยการใส่ className="font-[family-name:var(--font-noto-thai)]" 
-          หรือถ้าใน globals.css ปังตั้ง font-family ไว้แล้ว ก็ต้องเช็คชื่อให้ตรงกันน่อ
-      */}
+      <head>
+        {/* 🚩 1. Meta Pixel Code (หลัก) */}
+        <Script id="fb-pixel" strategy="afterInteractive">
+          {`
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '1203012408254334');
+            fbq('track', 'PageView');
+          `}
+        </Script>
+      </head>
       <body className="font-[family-name:var(--font-noto-thai)] antialiased text-[#31537c] bg-[#f0f7ff] min-h-screen relative overflow-x-hidden">
         
+        {/* 🚩 2. Noscript สำหรับคนปิด JavaScript (ใส่ต้น body) */}
+        <noscript>
+          <img 
+            height="1" 
+            width="1" 
+            style={{ display: 'none' }}
+            src="https://www.facebook.com/tr?id=1203012408254334&ev=PageView&noscript=1"
+          />
+        </noscript>
+
         {/* ลายตารางกราฟพรีเมียม */}
         <div 
           className="absolute inset-0 opacity-[0.12] pointer-events-none"
@@ -45,7 +68,6 @@ export default function RootLayout({
           }}
         />
 
-        {/* 📄 Layer 2: Main Content */}
         <div className="relative z-10">
           {children}
         </div>
