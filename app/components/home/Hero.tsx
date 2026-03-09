@@ -121,7 +121,7 @@ export default function HeroSection() {
                   >
                     <option value="bank">บัญชีธนาคารจีน</option>
                     <option value="alipay">อลิเพย์ / Alipay</option>
-                    <option value="wechat">วีแชท / WeChat</option>
+                    <option value="wechat">วีแชท / WeChat </option>
                     <option value="pay">ฝากจ่ายยอดสินค้า</option>
                   </select>
                   <ChevronDown className="absolute right-4 top-[18px] text-slate-400" size={20} />
