@@ -7,7 +7,7 @@ export default function OurServices() {
 
   const serviceCards = [
     { id: 2, image: '/images/service-2.jpg', title: 'รีวิวจากลูกค้า' },
-    { id: 3, image: '/images/service-4.jpg', title: 'กำไรดีเพราะเรทถูก' },
+    { id: 3, image: '/images/service-3.webp', title: 'กำไรดีเพราะเรทถูก' },
     { id: 1, image: '/images/service-1.jpg', title: 'รีวิวบริการ' },     
     { id: 4, image: '/images/service-4.jpg', title: 'รีวิวโอนเงิน' },
   ];

@@ -23,7 +23,7 @@ export default function Navbar() {
         
         {/* 🎡 Logo Section: จิ้มแล้วไป www.เงินหยวน.com น่อ */}
         <a 
-          href="https://www.เงินหยวน.com" 
+          href="#" 
           target="_blank" 
           rel="noopener noreferrer" 
           className="flex items-center gap-3 group cursor-pointer transition-opacity hover:opacity-80"
