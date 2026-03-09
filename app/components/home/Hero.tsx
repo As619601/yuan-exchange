@@ -1,17 +1,57 @@
 'use client';
-import React, { useState } from 'react';
-import { ArrowRightLeft, CheckCircle2, Clock } from 'lucide-react';
-import Link from 'next/link';
+import React, { useState, useMemo } from 'react';
+import { ArrowRightLeft, CheckCircle2, Clock, ChevronDown, Info } from 'lucide-react';
 
 export default function HeroSection() {
   const [amount, setAmount] = useState('10000');
-  const rate = 4.85;
-  const lineLink = "https://line.me/R/ti/p/@yuanexchange"; // 🚩 มากิเตรียมลิงค์ไว้ตรงนี้
+  const [transferType, setTransferType] = useState('bank'); 
+  
+  const lineLink = "https://line.me/R/ti/p/@yuanexchange";
+
+  // ✅ Logic คำนวณเรท (แยกประเภทชัดเจน)
+  const { currentRate, fee, resultCNY } = useMemo(() => {
+    const inputTHB = Number(amount) || 0;
+    let rate = 0;
+    let transferFee = 0;
+
+    if (transferType === 'bank') {
+      // 🏦 1. เรทบัญชีธนาคารจีน (เรทฐาน + 0.05)
+      const estCNY = inputTHB / 4.68; 
+      if (estCNY >= 100000) rate = 4.67; //100000¥ ขึ้นไป
+      else if (estCNY >= 50000) rate = 4.675; //50000¥ ขึ้นไป
+      else rate = 4.68;
+      
+      rate += 0.05; // บวกเพิ่มตามเงื่อนไขบัญชีจีน
+
+    } else if (transferType === 'alipay' || transferType === 'wechat') {
+      // 📱 2. เรท วีแชท / อลิเพย์
+      const estCNY = inputTHB / 4.71;
+      if (estCNY >= 100000) rate = 4.66; //100000¥ ขึ้นไป
+      else if (estCNY >= 50000) rate = 4.665; //50000¥ ขึ้นไป
+      else if (estCNY >= 10000) rate = 4.67; //10000¥ ขึ้นไป
+      else rate = 4.71; // ต่ำกว่า 10000¥
+
+      // ถ้าเป็น อลิเพย์ ให้บวกเพิ่ม 0.03 (วีแชทไม่บวก)
+      if (transferType === 'alipay') rate += 0.03;
+
+      // ค่าบริการ 50฿ ถ้าต่ำกว่า 1000 หยวน
+      if ((inputTHB / rate) < 1000) transferFee = 50;
+
+    } else if (transferType === 'pay') {
+      // 🔺 3. เรทฝากจ่าย
+      rate = 4.76;
+      if ((inputTHB / rate) < 1000) transferFee = 50;
+    }
+
+    return {
+      currentRate: rate.toFixed(3),
+      fee: transferFee,
+      resultCNY: Math.max(0, (inputTHB - transferFee) / rate)
+    };
+  }, [amount, transferType]);
 
   return (
-    <section className="relative w-full h-auto min-h-screen bg-[#0a6afc] flex items-center py-20 md:py-32 overflow-hidden">
-      
-      {/* 🎨 Background Gradient */}
+    <section className="relative w-full h-auto min-h-screen bg-[#0a6afc] flex items-center py-20 md:py-32 overflow-hidden font-sans text-left">
       <div className="absolute inset-0 bg-gradient-to-b from-[#003192] to-[#4488ff] opacity-90" />
       
       <div className="max-w-7xl mx-auto px-6 flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10 w-full">
@@ -19,95 +59,120 @@ export default function HeroSection() {
         {/* 📝 ฝั่งเนื้อหา */}
         <div className="text-white space-y-6 w-full text-center lg:text-left">
           <div className="space-y-1">
-            <h2 className="text-base md:text-xl font-bold opacity-90 leading-none">เงินหยวน</h2>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight leading-none uppercase">YUAN EXCHANGE</h1>
+            <h2 className="text-base md:text-xl font-bold opacity-90 leading-none tracking-wide">เงินหยวน</h2>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none uppercase italic">YUAN EXCHANGE</h1>
           </div>
-
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20 text-[10px] md:text-xs font-medium uppercase tracking-wide">
-            <CheckCircle2 size={12} className="text-green-400" />
-            ความปลอดภัยระดับธนาคารชั้นนำ
-          </div>
-
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-black leading-[1.2] md:leading-[1.15] break-words">
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-black leading-tight">
             แลกเงินหยวน โอนเงินไปจีน<br className="hidden md:block" />
-            <span className="text-white"> ครบวงจร จบทุกปัญหา </span>
+            <span className="text-white/90 font-extrabold"> ครบวงจร จบทุกปัญหา </span>
           </h2>
-
-          <p className="text-sm md:text-base max-w-lg mx-auto lg:mx-0 font-medium leading-relaxed">
-            บริการรวดเร็ว โปร่งใส ไม่มีค่าธรรมเนียมแอบแฝง  
-            ตอบโจทย์ทั้งนักธุรกิจและบุคคลทั่วไป
-          </p>
-
-          <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 text-[11px] md:text-xs font-bold pt-2">
-            <div className="flex items-center gap-2 justify-center"><CheckCircle2 size={14} className="text-red-400 shrink-0" /> เรทถูกราคาดี แลกเงินไว้ใจเรา</div>
-            <div className="flex items-center gap-2 justify-center"><CheckCircle2 size={14} className="text-red-400 shrink-0" /> สะดวกรวดเร็ว มั่นใจ</div>
-            <div className="flex items-center gap-2 justify-center"><CheckCircle2 size={14} className="text-red-400 shrink-0" /> รับประกันทุกยอด</div>
+          <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-2">
+            <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full border border-white/20 text-xs font-bold uppercase tracking-widest">
+              <CheckCircle2 size={14} className="text-green-400" /> ปลอดภัย 100%
+            </div>
+            <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full border border-white/20 text-xs font-bold uppercase tracking-widest">
+              <CheckCircle2 size={14} className="text-green-400" /> เรทดีที่สุด
+            </div>
           </div>
         </div>
 
         {/* 💳 ฝั่งเครื่องคิดเลข */}
-        <div className="flex justify-center lg:justify-end w-full">
-          <div className="bg-[#e8efff] p-6 md:p-8 rounded-[32px] md:rounded-[40px] shadow-2xl w-full max-w-[440px] border border-white/20">
+        <div className="flex flex-col items-center lg:items-end w-full gap-5">
+          <div className="bg-slate-50 p-6 md:p-8 rounded-[40px] shadow-2xl w-full max-w-[440px] border border-white/50">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-bold text-slate-800">คำนวณอัตราแลกเปลี่ยน</h3>
-              <div className="flex items-center gap-1 text-slate-400 text-[10px] font-medium">
-                <Clock size={12} /> 09:06 น.
+              <h3 className="text-lg font-black text-slate-800 uppercase">Calculator</h3>
+              <div className="flex items-center gap-1 text-slate-400 text-[10px] font-bold">
+                <Clock size={12} /> UPDATE: 09/03/2026
               </div>
             </div>
 
-            <div className="space-y-3 relative">
-              {/* Input THB */}
-              <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                <label className="text-[10px] text-slate-400 font-bold block mb-1 uppercase">คุณจ่าย (THB)</label>
-                <div className="flex justify-between items-center gap-2">
-                  <input 
-                    type="number" 
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    className="text-xl md:text-2xl font-bold text-slate-800 outline-none w-full bg-transparent min-w-0"
-                  />
-                  <div className="flex items-center gap-2 shrink-0">
-                    <img src="https://flagcdn.com/w40/th.png" alt="TH" className="w-5 h-3.5 object-cover rounded-sm" />
-                    <span className="font-bold text-slate-500 text-xs">THB</span>
-                  </div>
+            <div className="space-y-4">
+              {/* เลือกประเภทการโอน - มากิแยกย่อยให้แล้วน่อ */}
+              <div>
+                <label className="text-[10px] text-slate-400 font-bold block mb-1.5 uppercase tracking-widest text-left">เลือกช่องทางรับเงิน</label>
+                <div className="relative">
+                  <select 
+                    value={transferType}
+                    onChange={(e) => setTransferType(e.target.value)}
+                    className="w-full bg-white border-2 border-slate-100 p-4 rounded-2xl font-bold text-sm text-slate-700 appearance-none outline-none focus:border-blue-500 transition-all shadow-sm cursor-pointer"
+                  >
+                    <option value="bank">บัญชีธนาคารจีน ชื่อคนไทย ชื่อบริษัท(+0.05)</option>
+                    <option value="alipay">อลิเพย์ / Alipay ชื่อคนไทย ชื่อบริษัท(+0.03)</option>
+                    <option value="wechat">วีแชท / WeChat (เรทปกติ)</option>
+                    <option value="pay">ฝากจ่ายยอดสินค้า</option>
+                  </select>
+                  <ChevronDown className="absolute right-4 top-4.5 text-slate-400" size={20} />
                 </div>
               </div>
 
-              {/* Swap Button */}
-              <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-[88px] md:top-[95px] z-10">
-                <div className="bg-white p-2 rounded-full shadow-md border border-red-100 text-red-500">
-                  <ArrowRightLeft size={14} />
+              {/* Input THB */}
+              <div className="bg-white p-5 rounded-2xl border-2 border-slate-50 shadow-sm">
+                <label className="text-[10px] text-slate-400 font-bold block mb-1 uppercase tracking-widest text-left">คุณจ่าย (THB)</label>
+                <div className="flex justify-between items-center">
+                  <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} className="text-2xl font-black text-slate-800 outline-none w-full bg-transparent" />
+                  <span className="font-black text-slate-300 text-sm ml-2">THB</span>
                 </div>
               </div>
 
               {/* Result CNY */}
-              <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                <label className="text-[10px] text-slate-400 font-bold block mb-1 uppercase">ผู้รับได้ (CNY)</label>
-                <div className="flex justify-between items-center gap-2">
-                  <div className="text-xl md:text-2xl font-bold text-slate-800 truncate">
-                    {(Number(amount) / rate).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              <div className="bg-blue-600 p-5 rounded-2xl shadow-inner relative">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white p-2 rounded-full shadow-md text-[#0a6afc] border-4 border-slate-50">
+                  <ArrowRightLeft size={16} />
+                </div>
+                <label className="text-[10px] text-white/70 font-bold block mb-1 uppercase tracking-widest text-left mt-1">ผู้รับได้ (CNY)</label>
+                <div className="flex justify-between items-center">
+                  <div className="text-2xl font-black text-white truncate">
+                    {resultCNY.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <img src="https://flagcdn.com/w40/cn.png" alt="CN" className="w-5 h-3.5 object-cover rounded-sm" />
-                    <span className="font-bold text-slate-500 text-xs">CNY</span>
-                  </div>
+                  <span className="font-black text-white/50 text-sm ml-2">CNY</span>
                 </div>
               </div>
 
-              <div className="bg-[#d0e0ff] p-3 rounded-xl flex justify-between items-center text-[11px]">
-                <span className="text-slate-500 font-medium">1 CNY = {rate} THB</span>
-                <span className="font-bold text-slate-700">เรทพิเศษ</span>
+              {/* Rate Info */}
+              <div className="space-y-2 pt-1">
+                <div className="bg-slate-100 p-3 rounded-xl flex justify-between items-center text-[12px] font-black">
+                  <span className="text-slate-500 uppercase tracking-tighter">Current Rate:</span>
+                  <span className="text-blue-600">1¥ = {currentRate} ฿</span>
+                </div>
+                {fee > 0 && (
+                  <div className="flex items-center justify-center gap-1.5 text-[11px] text-red-500 font-bold py-1 bg-red-50 rounded-lg border border-red-100 animate-pulse">
+                    <Info size={12} /> ต่ำกว่า 1,000¥ มีค่าบริการ {fee}฿
+                  </div>
+                )}
               </div>
 
-              {/* 🚩 ปุ่ม "แลกเงินทันที" เปลี่ยนเป็น Tag <a> และใส่ลิงค์ไลน์แล้วน่อปัง */}
-              <a 
-                href={lineLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full bg-[#0047cc] hover:bg-blue-800 text-white py-4 rounded-2xl text-lg font-bold transition-all shadow-lg active:scale-95 mt-2 flex items-center justify-center"
-              >
+              <a href={lineLink} target="_blank" className="w-full bg-[#0a6afc] hover:bg-blue-700 text-white py-5 rounded-2xl text-xl font-black transition-all shadow-lg flex items-center justify-center active:scale-95 uppercase tracking-widest">
                 แลกเงินทันที
               </a>
+            </div>
+          </div>
+
+          {/* 🚩 รายละเอียดเงื่อนไขด้านล่าง */}
+          <div className="w-full max-w-[440px] bg-black/20 backdrop-blur-xl border border-white/10 rounded-3xl p-6 text-white shadow-2xl">
+            <h4 className="font-black text-sm uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-3 flex items-center gap-2">
+              <Info size={16} className="text-blue-300" />
+              Service Details
+            </h4>
+            <div className="space-y-3 text-[12px]">
+              <div className="flex justify-between border-b border-white/5 pb-2">
+                <span className="opacity-70">บัญชีธนาคารจีน (ไทย/บริษัท)</span>
+                <span className="font-bold text-blue-300">+0.05</span>
+              </div>
+              <div className="flex justify-between border-b border-white/5 pb-2">
+                <span className="opacity-70">อลิเพย์ (ไทย/บริษัท)</span>
+                <span className="font-bold text-orange-300">+0.03</span>
+              </div>
+              <div className="flex justify-between border-b border-white/5 pb-2">
+                <span className="opacity-70">วีแชท (จีน/ไทย/บริษัท)</span>
+                <span className="font-bold text-green-400">เรทปกติ</span>
+              </div>
+              <div className="flex justify-between border-b border-white/5 pb-2">
+                <span className="opacity-70">*เป็นเพียงค่าประมาณ </span>
+                <span className="font-bold text-green-400">โปรดติดต่อเจ้าหน้าที่เพื่อรับเรทที่ถูกต้องอีกครั้ง*</span>
+              </div>
+              <p className="text-[10px] text-red-200 italic pt-1">
+                * ยอดต่ำกว่า 1,000¥ มีค่าบริการ 50฿
+              </p>
             </div>
           </div>
         </div>
