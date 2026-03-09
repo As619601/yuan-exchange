@@ -26,18 +26,17 @@ export default function Home() {
       <PartnerSlider />
       <Footer />
 
-      {/* 📱 🚩 Sticky Contact Buttons (ฉบับชิดกันกริ๊บ โดยมากิจัง) */}
-      <div className="fixed right-6 bottom-10 z-[100] flex flex-col -space-y-2 md:-space-y-15">
+    {/* 📱 🚩 Sticky Contact Buttons (ฉบับชิดกริ๊บตามใจบอส โดยมากิจัง) */}
+      <div className="fixed right-6 bottom-10 z-[100] flex flex-col -space-y-1 md:-space-y-2">
         
-        {/* 💚 ปุ่ม Line - เน้นไอคอนใหญ่เต็มวง */}
+        {/* 💚 ปุ่ม Line - ใหญ่สะใจ p-0 */}
         <a 
           href="https://line.me/R/ti/p/@yuanexchange" 
           target="_blank" 
           rel="noopener noreferrer"
           className="group relative flex items-center justify-center w-24 h-24 md:w-32 md:h-32 transition-all duration-500 animate-float drop-shadow-2xl"
         >
-          {/* 🚩 ลบวงแหวนออก แล้วขยาย padding ให้ไอคอนใหญ่ขึ้น (p-0 หรือ p-1) */}
-          <div className="relative w-full h-full p-1 group-hover:scale-110 group-active:scale-95 transition-transform duration-300 ease-out"> 
+          <div className="relative w-full h-full p-0 group-hover:scale-110 group-active:scale-95 transition-transform duration-300 ease-out"> 
             <Image 
               src="/icons/line.webp" 
               alt="Line Contact"
@@ -46,19 +45,17 @@ export default function Home() {
               priority
             />
           </div>
-          
-          <span className="absolute right-full mr-4 px-4 py-2 bg-[#06c755] text-white text-sm font-bold rounded-2xl opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-4 transition-all duration-300 whitespace-nowrap pointer-events-none shadow-xl border border-white/20">
+          <span className="absolute right-full mr-4 px-4 py-2 bg-[#06c755] text-white text-sm font-bold rounded-2xl opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300 whitespace-nowrap pointer-events-none shadow-xl border border-white/20">
             คุยเรทเงินทาง Line
           </span>
         </a>
 
-        {/* 📞 ปุ่มโทร - เน้นไอคอนใหญ่สั่นเรียกแขก */}
+        {/* 📞 ปุ่มโทร - ชิดขึ้นมาเกยกันนิดๆ */}
         <a 
           href="tel:0839854714" 
           className="group relative flex items-center justify-center w-24 h-24 md:w-32 md:h-32 transition-all duration-500 animate-float-delayed drop-shadow-2xl"
         >
-          {/* 🚩 ลบวงแหวนออก แล้วขยายไอคอนให้เต็มพื้นที่ */}
-          <div className="relative w-full h-full p-1 group-hover:scale-110 group-active:scale-95 transition-transform duration-300 ease-out animate-shake-periodic"> 
+          <div className="relative w-full h-full p-0 group-hover:scale-110 group-active:scale-95 transition-transform duration-300 ease-out animate-shake-periodic"> 
             <Image 
               src="/icons/phone.webp" 
               alt="Call Us"
@@ -67,8 +64,7 @@ export default function Home() {
               priority
             />
           </div>
-
-          <span className="absolute right-full mr-4 px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-2xl opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-4 transition-all duration-300 whitespace-nowrap pointer-events-none shadow-xl border border-white/20">
+          <span className="absolute right-full mr-4 px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-2xl opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300 whitespace-nowrap pointer-events-none shadow-xl border border-white/20">
             โทรหาเรา
           </span>
         </a>
