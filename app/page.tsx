@@ -34,7 +34,7 @@ export default function Home() {
           href="https://line.me/R/ti/p/@yuanexchange" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="group relative flex items-center justify-center w-20 h-20 md:w-24 md:h-24 transition-all duration-500 animate-float drop-shadow-2xl"
+          className="group relative flex items-center justify-center w-24 h-24 md:w-32 md:h-32 transition-all duration-500 animate-float drop-shadow-2xl"
         >
           {/* 🚩 ลบวงแหวนออก แล้วขยาย padding ให้ไอคอนใหญ่ขึ้น (p-0 หรือ p-1) */}
           <div className="relative w-full h-full p-1 group-hover:scale-110 group-active:scale-95 transition-transform duration-300 ease-out"> 
@@ -55,7 +55,7 @@ export default function Home() {
         {/* 📞 ปุ่มโทร - เน้นไอคอนใหญ่สั่นเรียกแขก */}
         <a 
           href="tel:0839854714" 
-          className="group relative flex items-center justify-center w-20 h-20 md:w-24 md:h-24 transition-all duration-500 animate-float-delayed drop-shadow-2xl"
+          className="group relative flex items-center justify-center w-24 h-24 md:w-32 md:h-32 transition-all duration-500 animate-float-delayed drop-shadow-2xl"
         >
           {/* 🚩 ลบวงแหวนออก แล้วขยายไอคอนให้เต็มพื้นที่ */}
           <div className="relative w-full h-full p-1 group-hover:scale-110 group-active:scale-95 transition-transform duration-300 ease-out animate-shake-periodic"> 
