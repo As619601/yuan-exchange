@@ -1,54 +1,77 @@
 'use client';
 import React, { useState, useMemo } from 'react';
-import { ArrowRightLeft, CheckCircle2, Clock, ChevronDown, Info } from 'lucide-react';
+import { ArrowRightLeft, CheckCircle2, Clock, ChevronDown, Info, RefreshCw } from 'lucide-react';
+
+const RATE_CONFIG = {
+  bank: {
+    baseRate: 4.68,
+    bonus: 0.05,
+    thresholds: [{ minCNY: 100000, rate: 4.67 }, { minCNY: 50000, rate: 4.675 }]
+  },
+  digital: {
+    baseRate: 4.71,
+    alipayBonus: 0.03,
+    wechatBonus: 0,
+    minFeeThreshold: 1000,
+    feeAmount: 50,
+    thresholds: [{ minCNY: 100000, rate: 4.66 }, { minCNY: 50000, rate: 4.665 }, { minCNY: 10000, rate: 4.67 }]
+  },
+  pay: { fixedRate: 4.76, minFeeThreshold: 1000, feeAmount: 50 }
+};
 
 export default function HeroSection() {
   const [amount, setAmount] = useState('10000');
-  const [transferType, setTransferType] = useState('bank'); 
+  const [transferType, setTransferType] = useState('bank');
+  const [calculationMode, setCalculationMode] = useState('THBtoCNY'); 
   
   const lineLink = "https://line.me/R/ti/p/@yuanexchange";
 
-  // ✅ Logic คำนวณเรท (แยกประเภทชัดเจน)
-  const { currentRate, fee, resultCNY } = useMemo(() => {
-    const inputTHB = Number(amount) || 0;
+  const { currentRate, fee, resultValue } = useMemo(() => {
+    const inputNum = Number(amount) || 0;
     let rate = 0;
     let transferFee = 0;
 
-    if (transferType === 'bank') {
-      // 🏦 1. เรทบัญชีธนาคารจีน (เรทฐาน + 0.05)
-      const estCNY = inputTHB / 4.68; 
-      if (estCNY >= 100000) rate = 4.67; //100000¥ ขึ้นไป
-      else if (estCNY >= 50000) rate = 4.675; //50000¥ ขึ้นไป
-      else rate = 4.68;
-      
-      rate += 0.05; // บวกเพิ่มตามเงื่อนไขบัญชีจีน
+    switch (transferType) {
+      case 'bank': {
+        const config = RATE_CONFIG.bank;
+        const estCNY = calculationMode === 'THBtoCNY' ? inputNum / config.baseRate : inputNum;
+        const match = config.thresholds.find(t => estCNY >= t.minCNY);
+        rate = (match ? match.rate : config.baseRate) + config.bonus;
+        break;
+      }
+      case 'alipay':
+      case 'wechat': {
+        const config = RATE_CONFIG.digital;
+        const estCNY = calculationMode === 'THBtoCNY' ? inputNum / config.baseRate : inputNum;
+        const match = config.thresholds.find(t => estCNY >= t.minCNY);
+        const bonus = transferType === 'alipay' ? config.alipayBonus : config.wechatBonus;
+        rate = (match ? match.rate : config.baseRate) + bonus;
+        if (estCNY < config.minFeeThreshold) transferFee = config.feeAmount;
+        break;
+      }
+      case 'pay': {
+        const config = RATE_CONFIG.pay;
+        rate = config.fixedRate;
+        const estCNY = calculationMode === 'THBtoCNY' ? inputNum / rate : inputNum;
+        if (estCNY < config.minFeeThreshold) transferFee = config.feeAmount;
+        break;
+      }
+      default: rate = 4.70;
+    }
 
-    } else if (transferType === 'alipay' || transferType === 'wechat') {
-      // 📱 2. เรท วีแชท / อลิเพย์
-      const estCNY = inputTHB / 4.71;
-      if (estCNY >= 100000) rate = 4.66; //100000¥ ขึ้นไป
-      else if (estCNY >= 50000) rate = 4.665; //50000¥ ขึ้นไป
-      else if (estCNY >= 10000) rate = 4.67; //10000¥ ขึ้นไป
-      else rate = 4.71; // ต่ำกว่า 10000¥
-
-      // ถ้าเป็น อลิเพย์ ให้บวกเพิ่ม 0.03 (วีแชทไม่บวก)
-      if (transferType === 'alipay') rate += 0.03;
-
-      // ค่าบริการ 50฿ ถ้าต่ำกว่า 1000 หยวน
-      if ((inputTHB / rate) < 1000) transferFee = 50;
-
-    } else if (transferType === 'pay') {
-      // 🔺 3. เรทฝากจ่าย
-      rate = 4.76;
-      if ((inputTHB / rate) < 1000) transferFee = 50;
+    let finalResult = 0;
+    if (calculationMode === 'THBtoCNY') {
+      finalResult = Math.max(0, (inputNum - transferFee) / rate);
+    } else {
+      finalResult = (inputNum * rate) + transferFee;
     }
 
     return {
       currentRate: rate.toFixed(3),
       fee: transferFee,
-      resultCNY: Math.max(0, (inputTHB - transferFee) / rate)
+      resultValue: finalResult
     };
-  }, [amount, transferType]);
+  }, [amount, transferType, calculationMode]);
 
   return (
     <section className="relative w-full h-auto min-h-screen bg-[#0a6afc] flex items-center py-20 md:py-32 overflow-hidden font-sans text-left">
@@ -56,7 +79,7 @@ export default function HeroSection() {
       
       <div className="max-w-7xl mx-auto px-6 flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10 w-full">
         
-        {/* 📝 ฝั่งเนื้อหา */}
+        {/* Content Side */}
         <div className="text-white space-y-6 w-full text-center lg:text-left">
           <div className="space-y-1">
             <h2 className="text-base md:text-xl font-bold opacity-90 leading-none tracking-wide">เงินหยวน</h2>
@@ -67,18 +90,19 @@ export default function HeroSection() {
             <span className="text-white/90 font-extrabold"> ครบวงจร จบทุกปัญหา </span>
           </h2>
           <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-2">
-            <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full border border-white/20 text-xs font-bold uppercase tracking-widest">
+            <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full border border-white/20 text-xs font-bold uppercase tracking-widest text-white">
               <CheckCircle2 size={14} className="text-green-400" /> ปลอดภัย 100%
             </div>
-            <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full border border-white/20 text-xs font-bold uppercase tracking-widest">
+            <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full border border-white/20 text-xs font-bold uppercase tracking-widest text-white">
               <CheckCircle2 size={14} className="text-green-400" /> เรทดีที่สุด
             </div>
           </div>
         </div>
 
-        {/* 💳 ฝั่งเครื่องคิดเลข */}
+        {/* Calculator Side */}
         <div className="flex flex-col items-center lg:items-end w-full gap-5">
-          <div className="bg-slate-50 p-6 md:p-8 rounded-[40px] shadow-2xl w-full max-w-[440px] border border-white/50">
+          <div className="bg-slate-50 p-6 md:p-8 rounded-[40px] shadow-2xl w-full max-w-[440px] border border-white/50 relative">
+            
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-lg font-black text-slate-800 uppercase">Calculator</h3>
               <div className="flex items-center gap-1 text-slate-400 text-[10px] font-bold">
@@ -86,8 +110,7 @@ export default function HeroSection() {
               </div>
             </div>
 
-            <div className="space-y-4">
-              {/* เลือกประเภทการโอน - มากิแยกย่อยให้แล้วน่อ */}
+            <div className="space-y-4 relative">
               <div>
                 <label className="text-[10px] text-slate-400 font-bold block mb-1.5 uppercase tracking-widest text-left">เลือกช่องทางรับเงิน</label>
                 <div className="relative">
@@ -101,42 +124,60 @@ export default function HeroSection() {
                     <option value="wechat">วีแชท / WeChat (เรทปกติ)</option>
                     <option value="pay">ฝากจ่ายยอดสินค้า</option>
                   </select>
-                  <ChevronDown className="absolute right-4 top-4.5 text-slate-400" size={20} />
+                  <ChevronDown className="absolute right-4 top-[18px] text-slate-400" size={20} />
                 </div>
               </div>
 
-              {/* Input THB */}
-              <div className="bg-white p-5 rounded-2xl border-2 border-slate-50 shadow-sm">
-                <label className="text-[10px] text-slate-400 font-bold block mb-1 uppercase tracking-widest text-left">คุณจ่าย (THB)</label>
+              {/* Input Section */}
+              <div className="bg-white p-5 rounded-2xl border-2 border-slate-50 shadow-sm relative z-0">
+                <label className="text-[10px] text-slate-400 font-bold block mb-1 uppercase tracking-widest text-left">
+                  {calculationMode === 'THBtoCNY' ? 'คุณจ่าย (THB)' : 'ระบุยอดที่ต้องการ (CNY)'}
+                </label>
                 <div className="flex justify-between items-center">
                   <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} className="text-2xl font-black text-slate-800 outline-none w-full bg-transparent" />
-                  <span className="font-black text-slate-300 text-sm ml-2">THB</span>
+                  <span className="font-black text-slate-300 text-sm ml-2">
+                    {calculationMode === 'THBtoCNY' ? 'THB' : 'CNY'}
+                  </span>
                 </div>
               </div>
 
-              {/* Result CNY */}
-              <div className="bg-blue-600 p-5 rounded-2xl shadow-inner relative">
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white p-2 rounded-full shadow-md text-[#0a6afc] border-4 border-slate-50">
-                  <ArrowRightLeft size={16} />
-                </div>
-                <label className="text-[10px] text-white/70 font-bold block mb-1 uppercase tracking-widest text-left mt-1">ผู้รับได้ (CNY)</label>
-                <div className="flex justify-between items-center">
-                  <div className="text-2xl font-black text-white truncate">
-                    {resultCNY.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              {/* Result Section พร้อมปุ่มสลับตรงกลาง */}
+              <div className="relative pt-2">
+                {/* 🔄 ปุ่มสลับโหมด - ย้ายมาไว้ตรงลูกศรตรงกลางน่อ */}
+                <button 
+                  onClick={() => setCalculationMode(prev => prev === 'THBtoCNY' ? 'CNYtoTHB' : 'THBtoCNY')}
+                  className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white p-2.5 rounded-full shadow-md text-[#0a6afc] border-4 border-slate-50 z-20 hover:text-blue-700 hover:scale-110 active:scale-95 transition-all group"
+                  title="สลับฝั่งการคำนวณ"
+                >
+                  <div className="relative overflow-hidden">
+                    <ArrowRightLeft size={18} className="group-hover:opacity-0 transition-opacity duration-300" />
+                    <RefreshCw size={18} className="absolute inset-0 opacity-0 group-hover:opacity-100 group-hover:rotate-180 transition-all duration-500" />
                   </div>
-                  <span className="font-black text-white/50 text-sm ml-2">CNY</span>
+                </button>
+
+                <div className="bg-blue-600 p-5 rounded-2xl shadow-inner relative overflow-hidden">
+                  <label className="text-[10px] text-white/70 font-bold block mb-1 uppercase tracking-widest text-left mt-1">
+                    {calculationMode === 'THBtoCNY' ? 'ผู้รับได้ (CNY)' : 'คุณต้องจ่ายทั้งหมด (THB)'}
+                  </label>
+                  <div className="flex justify-between items-center">
+                    <div className="text-2xl font-black text-white truncate">
+                      {resultValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </div>
+                    <span className="font-black text-white/50 text-sm ml-2">
+                      {calculationMode === 'THBtoCNY' ? 'CNY' : 'THB'}
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              {/* Rate Info */}
               <div className="space-y-2 pt-1">
                 <div className="bg-slate-100 p-3 rounded-xl flex justify-between items-center text-[12px] font-black">
-                  <span className="text-slate-500 uppercase tracking-tighter">Current Rate:</span>
+                  <span className="text-slate-500 uppercase tracking-tighter text-left">Current Rate:</span>
                   <span className="text-blue-600">1¥ = {currentRate} ฿</span>
                 </div>
                 {fee > 0 && (
                   <div className="flex items-center justify-center gap-1.5 text-[11px] text-red-500 font-bold py-1 bg-red-50 rounded-lg border border-red-100 animate-pulse">
-                    <Info size={12} /> ต่ำกว่า 1,000¥ มีค่าบริการ {fee}฿
+                    <Info size={12} /> มีค่าบริการ {fee}฿ (สำหรับยอดต่ำกว่า 1,000¥)
                   </div>
                 )}
               </div>
@@ -146,37 +187,7 @@ export default function HeroSection() {
               </a>
             </div>
           </div>
-
-          {/* 🚩 รายละเอียดเงื่อนไขด้านล่าง */}
-          <div className="w-full max-w-[440px] bg-black/20 backdrop-blur-xl border border-white/10 rounded-3xl p-6 text-white shadow-2xl">
-            <h4 className="font-black text-sm uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-3 flex items-center gap-2">
-              <Info size={16} className="text-blue-300" />
-              Service Details
-            </h4>
-            <div className="space-y-3 text-[12px]">
-              <div className="flex justify-between border-b border-white/5 pb-2">
-                <span className="opacity-70">บัญชีธนาคารจีน (ไทย/บริษัท)</span>
-                <span className="font-bold text-blue-300">+0.05</span>
-              </div>
-              <div className="flex justify-between border-b border-white/5 pb-2">
-                <span className="opacity-70">อลิเพย์ (ไทย/บริษัท)</span>
-                <span className="font-bold text-orange-300">+0.03</span>
-              </div>
-              <div className="flex justify-between border-b border-white/5 pb-2">
-                <span className="opacity-70">วีแชท (จีน/ไทย/บริษัท)</span>
-                <span className="font-bold text-green-400">เรทปกติ</span>
-              </div>
-              <div className="flex justify-between border-b border-white/5 pb-2">
-                <span className="opacity-70">*เป็นเพียงค่าประมาณ </span>
-                <span className="font-bold text-green-400">โปรดติดต่อเจ้าหน้าที่เพื่อรับเรทที่ถูกต้องอีกครั้ง*</span>
-              </div>
-              <p className="text-[10px] text-red-200 italic pt-1">
-                * ยอดต่ำกว่า 1,000¥ มีค่าบริการ 50฿
-              </p>
-            </div>
-          </div>
         </div>
-
       </div>
     </section>
   );

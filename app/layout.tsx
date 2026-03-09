@@ -66,30 +66,27 @@ export default function RootLayout({
       </head>
 
       <body className="font-[family-name:var(--font-noto-thai)] antialiased text-[#31537c] bg-[#f0f7ff] min-h-screen relative overflow-x-hidden">
-        
         {/* Noscript สำหรับ Facebook Pixel */}
         <noscript>
-          <img 
-            height="1" 
-            width="1" 
-            style={{ display: 'none' }}
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
             src={`https://www.facebook.com/tr?id=${FB_PIXEL_ID}&ev=PageView&noscript=1`}
             alt="fb-pixel"
           />
         </noscript>
 
         {/* ลายตารางกราฟพรีเมียม */}
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.12] pointer-events-none"
           style={{
             backgroundImage: `radial-gradient(#1e3a8a 0.5px, transparent 0.5px), linear-gradient(to right, #1e3a8a 0.5px, transparent 0.5px), linear-gradient(to bottom, #1e3a8a 0.5px, transparent 0.5px)`,
-            backgroundSize: '40px 40px, 40px 40px, 40px 40px',
+            backgroundSize: "40px 40px, 40px 40px, 40px 40px",
           }}
         />
 
-        <div className="relative z-10">
-          {children}
-        </div>
+        <div className="relative z-10">{children}</div>
       </body>
     </html>
   );
