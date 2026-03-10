@@ -142,9 +142,8 @@ export default function HeroSection() {
                     onChange={(e) => setTransferType(e.target.value)}
                     className="w-full bg-white border-2 border-slate-100 p-4 rounded-2xl font-bold text-sm text-slate-700 appearance-none outline-none focus:border-blue-500 transition-all shadow-sm cursor-pointer"
                   >
-                    <option value="bank">โอนเข้าบัญชีธนาคารจีน</option>
-                    <option value="alipay">อลิเพย์ / Alipay</option>
-                    <option value="wechat">วีแชท / WeChat</option>
+                    <option value="bank">โอนเข้าบัญชีธนาคาร</option>
+                    <option value="alipay">Alipay / Wechatpay</option>
                     <option value="pay">ธุรกรรมฝากจ่ายยอดสินค้า</option>
                   </select>
                   <ChevronDown className="absolute right-4 top-[18px] text-slate-400" size={20} />
