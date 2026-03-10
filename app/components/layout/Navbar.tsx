@@ -13,7 +13,6 @@ export default function Navbar() {
     { name: 'หน้าแรก', href: '/' },
     { name: 'บริการ', href: '#services' },
     { name: 'รีวิว/โปรโมชั่น', href: facebookLink },
-    { name: 'ระบบจัดการ', href: '/admin', isAdmin: true }, // 👈 เพิ่มเมนูนี้เข้ามา
     { name: 'ติดต่อเรา', href: lineLink },
   ];
 
