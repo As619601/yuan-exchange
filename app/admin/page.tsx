@@ -1,195 +1,207 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Lock, Save, RefreshCw, ChevronLeft, Database, AlertCircle, AlertTriangle } from 'lucide-react';
-import Link from 'next/link';
+import { Save, RefreshCw, ArrowUpRight, ArrowDownLeft, Wallet, AlertCircle } from 'lucide-react';
+
+// ✅ 1. สร้าง Interface กำหนดโครงสร้างข้อมูลให้ชัดเจน
+interface RateState {
+  bank_rate: string | number;
+  digital_rate: string | number;
+  pay_rate: string | number;
+  bank_rate_cny_to_thb: string | number;
+  digital_rate_cny_to_thb: string | number;
+  pay_rate_cny_to_thb: string | number;
+  fee_amount: string | number;
+  fee_threshold: string | number;
+}
 
 export default function AdminPage() {
-  const [password, setPassword] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   
-  // 📝 1. ใช้ String ใน State เพื่อให้ลบจนว่างได้น่อ
-  const [rates, setRates] = useState({
+  // ✅ 2. ระบุ Type ให้ State
+  const [rates, setRates] = useState<RateState>({
     bank_rate: '',
     digital_rate: '',
     pay_rate: '',
+    bank_rate_cny_to_thb: '',
+    digital_rate_cny_to_thb: '',
+    pay_rate_cny_to_thb: '',
     fee_amount: '',
     fee_threshold: ''
   });
 
-  useEffect(() => {
-    async function fetchRates() {
+  const fetchRates = useCallback(async () => {
+    try {
       const { data, error } = await supabase
         .from('rates')
         .select('*')
         .eq('id', 1)
         .single();
       
-      if (data && !error) {
-        // แปลงตัวเลขจาก DB เป็น String เพื่อใส่ใน Input
-        setRates({
-          bank_rate: data.bank_rate.toString(),
-          digital_rate: data.digital_rate.toString(),
-          pay_rate: data.pay_rate.toString(),
-          fee_amount: data.fee_amount.toString(),
-          fee_threshold: data.fee_threshold.toString()
-        });
+      if (data) {
+        setRates(data as RateState);
       }
+    } catch (err) {
+      console.error('Error fetching rates:', err);
+    } finally {
+      setLoading(false);
     }
-    fetchRates();
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === 'admin1234') {
-      setIsLoggedIn(true);
-    } else {
-      alert('รหัสผ่านไม่ถูกต้อง... ลองใหม่อีกครั้งนะ');
-    }
-  };
+  // ✅ 3. เช็คความถูกต้องโดยไม่ใช้ any
+  const isFormValid = useMemo(() => {
+    const requiredFields: (string | number)[] = [
+      rates.bank_rate, rates.digital_rate, rates.pay_rate,
+      rates.bank_rate_cny_to_thb, rates.digital_rate_cny_to_thb, rates.pay_rate_cny_to_thb,
+      rates.fee_amount, rates.fee_threshold
+    ];
+    return requiredFields.every(field => field !== '' && !isNaN(Number(field)) && Number(field) > 0);
+  }, [rates]);
 
-  // 💾 2. ฟังก์ชันอัปเดตพร้อมระบบตรวจเช็ค (Validation)
-  const handleUpdate = async () => {
-    // เช็คว่ามีช่องไหนว่างไหม
-    const hasEmptyField = Object.values(rates).some(value => value === '');
+  const handleSave = async () => {
+    if (!isFormValid) return;
     
-    if (hasEmptyField) {
-      alert('⚠️ ห้ามปล่อยช่องว่าง! กรุณากรอกตัวเลขให้ครบทุกช่อง');
-      return;
-    }
-
-    setLoading(true);
-    const { error } = await supabase
-      .from('rates')
-      .update({
-        bank_rate: Number(rates.bank_rate),
-        digital_rate: Number(rates.digital_rate),
-        pay_rate: Number(rates.pay_rate),
-        fee_amount: Number(rates.fee_amount),
-        fee_threshold: Number(rates.fee_threshold),
-        updated_at: new Date()
-      })
-      .eq('id', 1);
-
-    setLoading(false);
-    if (!error) {
-      alert('✨ อัปเดตเรทออนไลน์เรียบร้อยแล้วน่อ!');
-    } else {
-      alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล...');
+    setSaving(true);
+    try {
+      const { error } = await supabase
+        .from('rates')
+        .update(rates)
+        .eq('id', 1);
+      
+      if (error) throw error;
+      alert('บันทึกเรทใหม่เรียบร้อยแล้วน่อปัง! ✨');
+    } catch (err) {
+      alert('เกิดข้อผิดพลาดในการบันทึกน่อ!');
+    } finally {
+      setSaving(false);
     }
   };
 
-  if (!isLoggedIn) {
-    // ... ส่วน Login (เหมือนเดิม) ...
-    return (
-        <div className="min-h-screen bg-slate-100 flex items-center justify-center p-6">
-          <form onSubmit={handleLogin} className="bg-white p-8 rounded-[32px] shadow-xl w-full max-w-sm text-center">
-            <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Lock size={32} />
-            </div>
-            <h1 className="text-2xl font-black text-slate-800 mb-2 uppercase italic">Admin Access</h1>
-            <input 
-              type="password" 
-              placeholder="รหัสผ่าน"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl mb-4 outline-none focus:border-blue-500 transition-all font-bold text-center"
-            />
-            <button className="w-full bg-[#0a6afc] text-white py-4 rounded-2xl font-black uppercase tracking-widest">Login</button>
-          </form>
-        </div>
-      );
-  }
+  useEffect(() => {
+    fetchRates();
+  }, [fetchRates]);
+
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 font-noto">
+      <div className="flex flex-col items-center gap-4">
+        <RefreshCw className="animate-spin text-blue-600" size={40} />
+        <p className="font-bold text-slate-500">กำลังดึงข้อมูลเรทปัจจุบันน่อ...</p>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 md:p-12 text-left">
-      <div className="max-w-3xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <Link href="/" className="flex items-center gap-2 text-slate-400 hover:text-blue-600 font-bold transition-all">
-            <ChevronLeft size={20} /> กลับไปหน้าบ้าน
-          </Link>
-          <div className="flex items-center gap-2 bg-green-100 text-green-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" /> Live System
+    <div className="max-w-4xl mx-auto p-6 font-noto py-12">
+      <div className="flex justify-between items-center mb-10">
+        <h1 className="text-3xl font-black flex items-center gap-3">
+          <div className="bg-blue-600 p-2 rounded-2xl text-white">
+            <RefreshCw size={28} />
+          </div>
+          จัดการเรทเงินหยวน
+        </h1>
+        {!isFormValid && (
+          <div className="flex items-center gap-2 text-red-500 bg-red-50 px-4 py-2 rounded-xl border border-red-100 animate-pulse">
+            <AlertCircle size={18} />
+            <span className="text-xs font-bold uppercase tracking-tight">กรุณากรอกเรทให้ครบทุกช่องน่อ</span>
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        {/* 🇹🇭 -> 🇨🇳 บาทแลกหยวน */}
+        <div className="bg-white p-8 rounded-[32px] shadow-xl shadow-slate-200/50 border border-slate-100">
+          <h2 className="text-xl font-black mb-6 flex items-center gap-2 text-blue-600">
+            <ArrowUpRight size={24} /> บาท → หยวน (THB → CNY)
+          </h2>
+          <div className="space-y-5">
+            <RateInput label="บาทแลกหยวน" value={rates.bank_rate} onChange={(v) => setRates({...rates, bank_rate: v})} placeholder="เช่น 4.67" />
+            <RateInput label="Alipay / WeChat" value={rates.digital_rate} onChange={(v) => setRates({...rates, digital_rate: v})} placeholder="เช่น 4.70" />
+            <RateInput label="ฝากจ่ายยอดสินค้า" value={rates.pay_rate} onChange={(v) => setRates({...rates, pay_rate: v})} placeholder="เช่น 4.75" />
           </div>
         </div>
 
-        <div className="bg-white rounded-[40px] shadow-2xl overflow-hidden border border-white">
-          <div className="bg-[#0a6afc] p-8 md:p-10 text-white">
-            <h2 className="text-3xl font-black italic uppercase flex items-center gap-3 tracking-tight">
-              <Database /> Rate Control Center
-            </h2>
+        {/* 🇨🇳 -> 🇹🇭 หยวนแลกบาท */}
+        <div className="bg-white p-8 rounded-[32px] shadow-xl shadow-slate-200/50 border border-slate-100">
+          <h2 className="text-xl font-black mb-6 flex items-center gap-2 text-green-600">
+            <ArrowDownLeft size={24} /> หยวน → บาท (CNY → THB)
+          </h2>
+          <div className="space-y-5">
+            <RateInput label="หยวนแลกบาท" value={rates.bank_rate_cny_to_thb} onChange={(v) => setRates({...rates, bank_rate_cny_to_thb: v})} placeholder="เช่น 4.35" />
+            <RateInput label="Alipay / WeChat" value={rates.digital_rate_cny_to_thb} onChange={(v) => setRates({...rates, digital_rate_cny_to_thb: v})} placeholder="เช่น 4.40" />
+            <RateInput label="ฝากจ่ายยอดสินค้า" value={rates.pay_rate_cny_to_thb} onChange={(v) => setRates({...rates, pay_rate_cny_to_thb: v})} placeholder="เช่น 4.45" />
           </div>
+        </div>
 
-          <div className="p-8 md:p-10 space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                { label: 'Bank (โอนธนาคาร)', key: 'bank_rate' },
-                { label: 'Digital (Alipay/WeChat)', key: 'digital_rate' },
-                { label: 'Pay (ฝากจ่ายสินค้า)', key: 'pay_rate' },
-              ].map((item) => (
-                <div key={item.key} className="space-y-2">
-                  <label className="text-[11px] font-black text-slate-400 uppercase px-1 tracking-widest">{item.label}</label>
-                  <input 
-                    type="text" // 👈 เปลี่ยนเป็น text เพื่อคุมพฤติกรรมการพิมพ์
-                    inputMode="decimal" // 👈 ให้มือถือโชว์แป้นตัวเลข
-                    value={rates[item.key as keyof typeof rates]}
-                    onChange={(e) => {
-                        // 🛠️ อนุญาตให้กรอกเฉพาะตัวเลขและจุดทศนิยมเท่านั้น
-                        const val = e.target.value;
-                        if (val === '' || /^[0-9]*\.?[0-9]*$/.test(val)) {
-                            setRates({ ...rates, [item.key]: val });
-                        }
-                    }}
-                    className={`w-full bg-slate-50 border-2 p-4 rounded-2xl font-black text-slate-700 text-xl outline-none transition-all shadow-sm ${
-                        rates[item.key as keyof typeof rates] === '' ? 'border-red-200' : 'border-slate-100 focus:border-blue-600 focus:bg-white'
-                    }`}
-                  />
-                </div>
-              ))}
+        {/* 💰 ค่าธรรมเนียม */}
+        <div className="md:col-span-2 bg-slate-900 text-white p-8 rounded-[32px] shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+            <Wallet size={120} />
+          </div>
+          <h2 className="text-xl font-black mb-6 flex items-center gap-2 relative z-10">
+            <Wallet size={24} className="text-yellow-400" /> นโยบายค่าธรรมเนียม
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+            <div className="space-y-2">
+              <label className="text-xs font-bold opacity-50 uppercase tracking-widest">ค่าบริการต่อรายการ (บาท)</label>
+              <input 
+                type="number" 
+                placeholder="ระบุค่าบริการ เช่น 50"
+                className="w-full p-4 bg-white/10 rounded-2xl border border-white/10 font-bold text-2xl text-white focus:bg-white/20 outline-none transition-all placeholder:text-white/20" 
+                value={rates.fee_amount} 
+                onChange={(e) => setRates({...rates, fee_amount: e.target.value})} 
+              />
             </div>
-
-            <div className="pt-8 border-t border-slate-100">
-              <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
-                <AlertCircle size={14} /> Fee Configuration
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {[
-                    { label: 'ค่าธรรมเนียม (บาท)', key: 'fee_amount' },
-                    { label: 'ยอดหยวนขั้นต่ำฟรีค่าธรรมเนียม', key: 'fee_threshold' }
-                ].map((item) => (
-                    <div key={item.key}>
-                        <label className="text-[11px] font-black text-slate-400 uppercase px-1 tracking-widest">{item.label}</label>
-                        <input 
-                            type="text"
-                            inputMode="numeric"
-                            value={rates[item.key as keyof typeof rates]}
-                            onChange={(e) => {
-                                const val = e.target.value;
-                                if (val === '' || /^[0-9]*$/.test(val)) {
-                                    setRates({ ...rates, [item.key]: val });
-                                }
-                            }}
-                            className={`w-full bg-slate-50 border-2 p-4 rounded-2xl font-black text-slate-700 outline-none transition-all shadow-sm ${
-                                rates[item.key as keyof typeof rates] === '' ? 'border-red-200' : 'border-slate-100 focus:border-blue-600 focus:bg-white'
-                            }`}
-                        />
-                    </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="pt-4">
-              <button 
-                onClick={handleUpdate}
-                disabled={loading}
-                className="w-full bg-[#0a6afc] hover:bg-blue-700 text-white py-6 rounded-3xl text-xl font-black flex items-center justify-center gap-3 shadow-xl shadow-blue-100 active:scale-[0.98] transition-all disabled:opacity-50 uppercase tracking-widest"
-              >
-                {loading ? <RefreshCw className="animate-spin" /> : <Save />} บันทึกและอัปเดตหน้าเว็บ
-              </button>
+            <div className="space-y-2">
+              <label className="text-xs font-bold opacity-50 uppercase tracking-widest">ยอดขั้นต่ำฟรีค่าธรรมเนียม (หยวน)</label>
+              <input 
+                type="number" 
+                placeholder="ระบุยอด เช่น 1000"
+                className="w-full p-4 bg-white/10 rounded-2xl border border-white/10 font-bold text-2xl text-white focus:bg-white/20 outline-none transition-all placeholder:text-white/20" 
+                value={rates.fee_threshold} 
+                onChange={(e) => setRates({...rates, fee_threshold: e.target.value})} 
+              />
             </div>
           </div>
         </div>
+      </div>
+
+      <button 
+        onClick={handleSave}
+        disabled={saving || !isFormValid}
+        className={`w-full mt-10 py-6 rounded-[24px] font-black text-2xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] shadow-2xl 
+          ${isFormValid ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-200' : 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'}`}
+      >
+        {saving ? <RefreshCw className="animate-spin" /> : <Save />}
+        {saving ? 'กำลังบันทึกข้อมูล...' : isFormValid ? 'อัปเดตเรทแบบ Real-time' : 'โปรดกรอกเรทให้ครบ'}
+      </button>
+    </div>
+  );
+}
+
+// ✅ 4. ระบุ Type ให้ Props ของ RateInput
+interface RateInputProps {
+  label: string;
+  value: string | number;
+  onChange: (v: string) => void;
+  placeholder: string;
+}
+
+function RateInput({ label, value, onChange, placeholder }: RateInputProps) {
+  return (
+    <div className="space-y-1.5">
+      <label className="text-[11px] font-black text-slate-400 uppercase tracking-wider ml-1">{label}</label>
+      <div className="relative">
+        <input 
+          type="number" 
+          step="0.01" 
+          placeholder={placeholder}
+          className="w-full p-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-blue-500 focus:bg-white outline-none font-black text-xl text-slate-700 transition-all placeholder:text-slate-300" 
+          value={value} 
+          onChange={(e) => onChange(e.target.value)} 
+        />
+        <span className="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-slate-300">฿</span>
       </div>
     </div>
   );
