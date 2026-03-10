@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Menu, X, LayoutDashboard } from 'lucide-react'; 
+import { Menu, X } from 'lucide-react'; 
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -9,6 +9,7 @@ export default function Navbar() {
   const lineLink = "https://line.me/R/ti/p/@yuanexchange";
   const facebookLink = "https://www.facebook.com/share/1D3fHYY9EX/";
 
+  // 📝 รายการเมนูหน้าบ้าน (ไม่มี Admin แล้วน่อ)
   const navLinks = [
     { name: 'หน้าแรก', href: '/' },
     { name: 'บริการ', href: '#services' },
@@ -42,13 +43,8 @@ export default function Navbar() {
             <Link 
               key={link.name} 
               href={link.href}
-              className={`font-bold transition-colors text-lg flex items-center gap-1.5 ${
-                link.isAdmin 
-                  ? 'text-blue-200 hover:text-white border-b-2 border-blue-400/30 pb-0.5' 
-                  : 'text-white hover:text-green-400'
-              }`}
+              className="text-white font-bold hover:text-green-400 transition-colors text-lg"
             >
-              {link.isAdmin && <LayoutDashboard size={18} />}
               {link.name}
             </Link>
           ))}
@@ -89,11 +85,8 @@ export default function Navbar() {
               key={link.name} 
               href={link.href}
               onClick={() => setIsOpen(false)}
-              className={`font-bold text-xl flex items-center gap-2 ${
-                link.isAdmin ? 'text-blue-300 italic' : 'text-white'
-              }`}
+              className="text-white font-bold text-xl"
             >
-              {link.isAdmin && <LayoutDashboard size={20} />}
               {link.name}
             </Link>
           ))}
