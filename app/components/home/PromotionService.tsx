@@ -29,18 +29,7 @@ export default function PromotionService() {
             </h2>
             <p className="text-lg md:text-2xl font-bold opacity-90">
               ได้รับเงินทันใจ ปลอดภัย รับประกันทุกยอด
-            </p>
-            
-            <div className="flex justify-center gap-2 mt-8">
-              {[...Array(4)].map((_, i) => (
-                <div 
-                  key={i} 
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    i === 1 ? 'bg-white w-8' : 'bg-white/30 w-2'
-                  }`} 
-                />
-              ))}
-            </div>
+            </p>      
           </div>
 
           {/* ส่วนล่าง: Service Icons Grid (🚩 ปรับขนาดไอคอนตรงนี้เลยน่อ) */}
