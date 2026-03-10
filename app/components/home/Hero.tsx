@@ -1,28 +1,20 @@
 'use client';
 import React, { useState, useMemo } from 'react';
-import { ArrowRightLeft, CheckCircle2, Clock, ChevronDown, Info, RefreshCw } from 'lucide-react';
+import { ArrowRightLeft, CheckCircle2, Clock, ChevronDown, Info, RefreshCw, MessageCircle } from 'lucide-react';
 
+// ⚙️ Configuration: ปรับเรทดิบที่นี่น่อ
 const RATE_CONFIG = {
-  bank: {
-    baseRate: 4.68,
-    bonus: 0.05,
-    thresholds: [{ minCNY: 100000, rate: 4.67 }, { minCNY: 50000, rate: 4.675 }]
-  },
-  digital: {
-    baseRate: 4.71,
-    alipayBonus: 0.03,
-    wechatBonus: 0,
-    minFeeThreshold: 1000,
-    feeAmount: 50,
-    thresholds: [{ minCNY: 100000, rate: 4.66 }, { minCNY: 50000, rate: 4.665 }, { minCNY: 10000, rate: 4.67 }]
-  },
-  pay: { fixedRate: 4.76, minFeeThreshold: 1000, feeAmount: 50 }
+  bank: 4.68,
+  digital: 4.71,
+  pay: 4.76,
+  minFeeThreshold: 1000,
+  feeAmount: 50
 };
 
 export default function HeroSection() {
-  const [amount, setAmount] = useState('10000');
+  const [calculationMode, setCalculationMode] = useState('CNYtoTHB');
+  const [amount, setAmount] = useState('1000');
   const [transferType, setTransferType] = useState('bank');
-  const [calculationMode, setCalculationMode] = useState('THBtoCNY'); 
   
   const lineLink = "https://line.me/R/ti/p/@yuanexchange";
 
@@ -31,43 +23,33 @@ export default function HeroSection() {
     let rate = 0;
     let transferFee = 0;
 
-    switch (transferType) {
-      case 'bank': {
-        const config = RATE_CONFIG.bank;
-        const estCNY = calculationMode === 'THBtoCNY' ? inputNum / config.baseRate : inputNum;
-        const match = config.thresholds.find(t => estCNY >= t.minCNY);
-        rate = (match ? match.rate : config.baseRate) + config.bonus;
-        break;
-      }
-      case 'alipay':
-      case 'wechat': {
-        const config = RATE_CONFIG.digital;
-        const estCNY = calculationMode === 'THBtoCNY' ? inputNum / config.baseRate : inputNum;
-        const match = config.thresholds.find(t => estCNY >= t.minCNY);
-        const bonus = transferType === 'alipay' ? config.alipayBonus : config.wechatBonus;
-        rate = (match ? match.rate : config.baseRate) + bonus;
-        if (estCNY < config.minFeeThreshold) transferFee = config.feeAmount;
-        break;
-      }
-      case 'pay': {
-        const config = RATE_CONFIG.pay;
-        rate = config.fixedRate;
-        const estCNY = calculationMode === 'THBtoCNY' ? inputNum / rate : inputNum;
-        if (estCNY < config.minFeeThreshold) transferFee = config.feeAmount;
-        break;
-      }
-      default: rate = 4.70;
+    // 1. เลือกเรทดิบตามประเภท (ไม่มีบวก Bonus แล้วน่อ)
+    if (transferType === 'bank') {
+      rate = RATE_CONFIG.bank;
+    } else if (transferType === 'alipay' || transferType === 'wechat') {
+      rate = RATE_CONFIG.digital;
+    } else if (transferType === 'pay') {
+      rate = RATE_CONFIG.pay;
     }
 
+    // 2. เช็กค่าธรรมเนียมจากยอดหยวน
+    const totalCNY = calculationMode === 'CNYtoTHB' ? inputNum : (inputNum / rate);
+    if (totalCNY > 0 && totalCNY < RATE_CONFIG.minFeeThreshold) {
+      transferFee = RATE_CONFIG.feeAmount;
+    }
+
+    // 3. คำนวณตามโหมด
     let finalResult = 0;
-    if (calculationMode === 'THBtoCNY') {
-      finalResult = Math.max(0, (inputNum - transferFee) / rate);
-    } else {
+    if (calculationMode === 'CNYtoTHB') {
+      // หยวน -> บาท: (ยอดหยวน * เรท) + ค่าธรรมเนียม
       finalResult = (inputNum * rate) + transferFee;
+    } else {
+      // บาท -> หยวน: (ยอดบาท - ค่าธรรมเนียม) / เรท
+      finalResult = Math.max(0, (inputNum - transferFee) / rate);
     }
 
     return {
-      currentRate: rate.toFixed(3),
+      currentRate: rate.toFixed(2),
       fee: transferFee,
       resultValue: finalResult
     };
@@ -101,88 +83,114 @@ export default function HeroSection() {
 
         {/* Calculator Side */}
         <div className="flex flex-col items-center lg:items-end w-full gap-5">
-          <div className="bg-slate-50 p-6 md:p-8 rounded-[40px] shadow-2xl w-full max-w-[440px] border border-white/50 relative">
+          <div className="bg-slate-50 p-4 md:p-8 rounded-[40px] shadow-2xl w-full max-w-[440px] border border-white/50 relative">
             
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-black text-slate-800 uppercase">Calculator</h3>
-              <div className="flex items-center gap-1 text-slate-400 text-[10px] font-bold">
-                <Clock size={12} /> UPDATE: 09/03/2026
-              </div>
+            {/* 📑 Tab Switcher */}
+            <div className="flex bg-slate-200/50 p-1.5 rounded-2xl mb-6 gap-1">
+              <button 
+                onClick={() => { setCalculationMode('CNYtoTHB'); setAmount('1000'); }}
+                className={`flex-1 py-3 rounded-xl text-xs font-black transition-all uppercase tracking-tighter ${calculationMode === 'CNYtoTHB' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                หยวน แลก บาท
+              </button>
+              <button 
+                onClick={() => { setCalculationMode('THBtoCNY'); setAmount('10000'); }}
+                className={`flex-1 py-3 rounded-xl text-xs font-black transition-all uppercase tracking-tighter ${calculationMode === 'THBtoCNY' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                บาท แลก หยวน
+              </button>
             </div>
 
-            <div className="space-y-4 relative">
+            <div className="space-y-4">
               <div>
-                <label className="text-[10px] text-slate-400 font-bold block mb-1.5 uppercase tracking-widest text-left">เลือกช่องทางรับเงิน</label>
+                <label className="text-[10px] text-slate-400 font-bold block mb-1.5 uppercase tracking-widest text-left px-1">เลือกช่องทางรับเงิน</label>
                 <div className="relative">
                   <select 
                     value={transferType}
                     onChange={(e) => setTransferType(e.target.value)}
                     className="w-full bg-white border-2 border-slate-100 p-4 rounded-2xl font-bold text-sm text-slate-700 appearance-none outline-none focus:border-blue-500 transition-all shadow-sm cursor-pointer"
                   >
-                    <option value="bank">บัญชีธนาคารจีน</option>
+                    <option value="bank">โอนเข้าบัญชีธนาคารจีน</option>
                     <option value="alipay">อลิเพย์ / Alipay</option>
-                    <option value="wechat">วีแชท / WeChat </option>
-                    <option value="pay">ฝากจ่ายยอดสินค้า</option>
+                    <option value="wechat">วีแชท / WeChat</option>
+                    <option value="pay">ธุรกรรมฝากจ่ายยอดสินค้า</option>
                   </select>
                   <ChevronDown className="absolute right-4 top-[18px] text-slate-400" size={20} />
                 </div>
               </div>
 
-              {/* Input Section */}
-              <div className="bg-white p-5 rounded-2xl border-2 border-slate-50 shadow-sm relative z-0">
+              {/* Input Area */}
+              <div className="bg-white p-5 rounded-2xl border-2 border-slate-100 shadow-sm transition-all focus-within:border-blue-200">
                 <label className="text-[10px] text-slate-400 font-bold block mb-1 uppercase tracking-widest text-left">
-                  {calculationMode === 'THBtoCNY' ? 'คุณจ่าย (THB)' : 'ระบุยอดที่ต้องการ (CNY)'}
+                  {calculationMode === 'CNYtoTHB' ? 'ระบุยอดหยวน (CNY)' : 'ระบุยอดบาท (THB)'}
                 </label>
                 <div className="flex justify-between items-center">
-                  <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} className="text-2xl font-black text-slate-800 outline-none w-full bg-transparent" />
-                  <span className="font-black text-slate-300 text-sm ml-2">
-                    {calculationMode === 'THBtoCNY' ? 'THB' : 'CNY'}
+                  <input 
+                    type="number" 
+                    value={amount} 
+                    onChange={(e) => setAmount(e.target.value)} 
+                    className="text-2xl font-black text-slate-800 outline-none w-full bg-transparent" 
+                  />
+                  <span className="font-black text-blue-600 text-sm ml-2 bg-blue-50 px-3 py-1 rounded-lg">
+                    {calculationMode === 'CNYtoTHB' ? 'CNY' : 'THB'}
                   </span>
                 </div>
               </div>
 
-              {/* Result Section พร้อมปุ่มสลับตรงกลาง */}
-              <div className="relative pt-2">
-                {/* 🔄 ปุ่มสลับโหมด - ย้ายมาไว้ตรงลูกศรตรงกลางน่อ */}
-                <button 
-                  onClick={() => setCalculationMode(prev => prev === 'THBtoCNY' ? 'CNYtoTHB' : 'THBtoCNY')}
-                  className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white p-2.5 rounded-full shadow-md text-[#0a6afc] border-4 border-slate-50 z-20 hover:text-blue-700 hover:scale-110 active:scale-95 transition-all group"
-                  title="สลับฝั่งการคำนวณ"
-                >
-                  <div className="relative overflow-hidden">
-                    <ArrowRightLeft size={18} className="group-hover:opacity-0 transition-opacity duration-300" />
-                    <RefreshCw size={18} className="absolute inset-0 opacity-0 group-hover:opacity-100 group-hover:rotate-180 transition-all duration-500" />
-                  </div>
-                </button>
+              {/* Middle Icon */}
+              <div className="flex justify-center -my-2 relative z-10">
+                <div className="bg-white p-2 rounded-full shadow-md border-4 border-slate-50 text-blue-600">
+                  <ArrowRightLeft size={16} />
+                </div>
+              </div>
 
-                <div className="bg-blue-600 p-5 rounded-2xl shadow-inner relative overflow-hidden">
-                  <label className="text-[10px] text-white/70 font-bold block mb-1 uppercase tracking-widest text-left mt-1">
-                    {calculationMode === 'THBtoCNY' ? 'ผู้รับได้ (CNY)' : 'คุณต้องจ่ายทั้งหมด (THB)'}
-                  </label>
-                  <div className="flex justify-between items-center">
-                    <div className="text-2xl font-black text-white truncate">
-                      {resultValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              {/* Result Area */}
+              <div className="bg-blue-600 p-6 rounded-3xl shadow-lg relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform pointer-events-none">
+                    <RefreshCw size={60} />
+                </div>
+                <label className="text-[10px] text-white/70 font-bold block mb-1 uppercase tracking-widest text-left">
+                  {calculationMode === 'CNYtoTHB' ? 'คุณต้องจ่ายทั้งหมด (THB)' : 'ผู้รับจะได้รับ (CNY)'}
+                </label>
+                <div className="flex justify-between items-center">
+                  <div className="text-3xl font-black text-white truncate">
+                    {resultValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </div>
+                  <span className="font-black text-white/50 text-sm ml-2 uppercase">
+                    {calculationMode === 'CNYtoTHB' ? 'THB' : 'CNY'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Dynamic Info */}
+              <div className="space-y-3 pt-1">
+                <div className="flex justify-between items-center px-2">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">เรทปัจจุบัน</span>
+                    <span className="text-sm font-black text-slate-700">1¥ = {currentRate} ฿</span>
+                  </div>
+                  {fee > 0 && (
+                    <div className="flex flex-col items-end">
+                      <span className="text-[10px] text-red-400 font-bold uppercase tracking-tight text-right italic leading-none">Low Amount Fee</span>
+                      <span className="text-sm font-black text-red-500">+{fee} ฿</span>
                     </div>
-                    <span className="font-black text-white/50 text-sm ml-2">
-                      {calculationMode === 'THBtoCNY' ? 'CNY' : 'THB'}
-                    </span>
+                  )}
+                </div>
+                
+                {/* 📝 โน้ตด้านล่าง */}
+                <div className="bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50 space-y-2">
+                  <div className="flex items-start gap-2 text-[11px] text-blue-700 font-bold leading-relaxed">
+                    <Info size={14} className="shrink-0 mt-0.5" />
+                    <p>ยอดต่ำกว่า 1,000 หยวน มีค่าบริการ 50 บาท/รายการ</p>
+                  </div>
+                  <div className="flex items-start gap-2 text-[11px] text-slate-500 font-medium leading-relaxed italic">
+                    <MessageCircle size={14} className="shrink-0 mt-0.5 text-green-500" />
+                    <p>ก่อนทำธุรกรรมสอบถามแอดมินทุกครั้ง ยอดยิ่งสูงเรทยิ่งดี!</p>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-2 pt-1">
-                <div className="bg-slate-100 p-3 rounded-xl flex justify-between items-center text-[12px] font-black">
-                  <span className="text-slate-500 uppercase tracking-tighter text-left">Current Rate:</span>
-                  <span className="text-blue-600">1¥ = {currentRate} ฿</span>
-                </div>
-                {fee > 0 && (
-                  <div className="flex items-center justify-center gap-1.5 text-[11px] text-red-500 font-bold py-1 bg-red-50 rounded-lg border border-red-100 animate-pulse">
-                    <Info size={12} /> มีค่าบริการ {fee}฿ (สำหรับยอดต่ำกว่า 1,000¥)
-                  </div>
-                )}
-              </div>
-
-              <a href={lineLink} target="_blank" className="w-full bg-[#0a6afc] hover:bg-blue-700 text-white py-5 rounded-2xl text-xl font-black transition-all shadow-lg flex items-center justify-center active:scale-95 uppercase tracking-widest">
+              <a href={lineLink} target="_blank" className="w-full bg-[#0a6afc] hover:bg-blue-700 text-white py-5 rounded-2xl text-xl font-black transition-all shadow-lg shadow-blue-200 flex items-center justify-center active:scale-95 uppercase tracking-widest gap-2">
                 แลกเงินทันที
               </a>
             </div>
