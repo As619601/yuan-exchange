@@ -4,9 +4,9 @@ import { ArrowRightLeft, CheckCircle2, Clock, ChevronDown, Info, RefreshCw, Mess
 
 // ⚙️ Configuration: ปรับเรทดิบที่นี่น่อ
 const RATE_CONFIG = {
-  bank: 4.68,
-  digital: 4.71,
-  pay: 4.76,
+  bank: 4.67, //แลกเงินเข้าบัญชีธนาคารจีน
+  digital: 4.70, //อลิเพย์ / WeChat (ธุรกรรมดิจิทัล)
+  pay: 4.75, //ธุรกรรมฝากจ่ายยอดสินค้า (เรทจะดีกว่าเพราะมีความเสี่ยงน้อยกว่า)
   minFeeThreshold: 1000,
   feeAmount: 50
 };
