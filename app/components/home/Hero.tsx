@@ -75,8 +75,7 @@ export default function HeroSection() {
   }, [amount, transferType, calculationMode, rates]); // 👈 เพิ่ม rates ใน dependency
 
   return (
-    <section className="relative w-full h-auto min-h-screen bg-[#0a6afc] flex items-center py-20 md:py-32 overflow-hidden font-sans text-left">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#003192] to-[#4488ff] opacity-90" />
+<section className="relative w-full h-auto min-h-screen bg-[#0a6afc] flex items-center py-20 md:py-32 overflow-hidden font-noto text-left">      <div className="absolute inset-0 bg-gradient-to-b from-[#003192] to-[#4488ff] opacity-90" />
       
       <div className="max-w-7xl mx-auto px-6 flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10 w-full">
         
@@ -84,7 +83,7 @@ export default function HeroSection() {
         <div className="text-white space-y-6 w-full text-center lg:text-left">
           <div className="space-y-1">
             <h2 className="text-base md:text-xl font-bold opacity-90 leading-none tracking-wide">เงินหยวน</h2>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none uppercase italic">YUAN EXCHANGE</h1>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none uppercase ">YUAN EXCHANGE</h1>
           </div>
           <h2 className="text-3xl md:text-5xl lg:text-6xl font-black leading-tight">
             แลกเงินหยวน โอนเงินไปจีน<br className="hidden md:block" />
