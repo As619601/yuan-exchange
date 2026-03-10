@@ -1,21 +1,44 @@
 'use client';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { supabase } from '@/lib/supabase'; // 👈 นำเข้าตัวเชื่อมที่ปังสร้างไว้
 import { ArrowRightLeft, CheckCircle2, Clock, ChevronDown, Info, RefreshCw, MessageCircle } from 'lucide-react';
-
-// ⚙️ Configuration: ปรับเรทดิบที่นี่น่อ
-const RATE_CONFIG = {
-  bank: 4.67, //แลกเงินเข้าบัญชีธนาคารจีน
-  digital: 4.70, //อลิเพย์ / WeChat (ธุรกรรมดิจิทัล)
-  pay: 4.75, //ธุรกรรมฝากจ่ายยอดสินค้า (เรทจะดีกว่าเพราะมีความเสี่ยงน้อยกว่า)
-  minFeeThreshold: 1000,
-  feeAmount: 50
-};
 
 export default function HeroSection() {
   const [calculationMode, setCalculationMode] = useState('CNYtoTHB');
   const [amount, setAmount] = useState('1000');
   const [transferType, setTransferType] = useState('bank');
   
+  // 💾 1. เปลี่ยนจาก CONFIG เป็น State เพื่อรอรับข้อมูลจาก Supabase
+  const [rates, setRates] = useState({
+    bank: 4.67,
+    digital: 4.70,
+    pay: 4.75,
+    minFeeThreshold: 1000,
+    feeAmount: 50
+  });
+
+  // 📡 2. ดึงข้อมูลจาก Supabase ทันทีที่หน้าเว็บโหลด
+  useEffect(() => {
+    async function fetchLiveRates() {
+      const { data, error } = await supabase
+        .from('rates')
+        .select('*')
+        .eq('id', 1)
+        .single();
+
+      if (data && !error) {
+        setRates({
+          bank: data.bank_rate,
+          digital: data.digital_rate,
+          pay: data.pay_rate,
+          feeAmount: data.fee_amount,
+          minFeeThreshold: data.fee_threshold
+        });
+      }
+    }
+    fetchLiveRates();
+  }, []);
+
   const lineLink = "https://line.me/R/ti/p/@yuanexchange";
 
   const { currentRate, fee, resultValue } = useMemo(() => {
@@ -23,28 +46,24 @@ export default function HeroSection() {
     let rate = 0;
     let transferFee = 0;
 
-    // 1. เลือกเรทดิบตามประเภท (ไม่มีบวก Bonus แล้วน่อ)
+    // 🎯 3. ใช้ค่าจาก State 'rates' ที่ดึงมาจากออนไลน์
     if (transferType === 'bank') {
-      rate = RATE_CONFIG.bank;
+      rate = rates.bank;
     } else if (transferType === 'alipay' || transferType === 'wechat') {
-      rate = RATE_CONFIG.digital;
+      rate = rates.digital;
     } else if (transferType === 'pay') {
-      rate = RATE_CONFIG.pay;
+      rate = rates.pay;
     }
 
-    // 2. เช็กค่าธรรมเนียมจากยอดหยวน
     const totalCNY = calculationMode === 'CNYtoTHB' ? inputNum : (inputNum / rate);
-    if (totalCNY > 0 && totalCNY < RATE_CONFIG.minFeeThreshold) {
-      transferFee = RATE_CONFIG.feeAmount;
+    if (totalCNY > 0 && totalCNY < rates.minFeeThreshold) {
+      transferFee = rates.feeAmount;
     }
 
-    // 3. คำนวณตามโหมด
     let finalResult = 0;
     if (calculationMode === 'CNYtoTHB') {
-      // หยวน -> บาท: (ยอดหยวน * เรท) + ค่าธรรมเนียม
       finalResult = (inputNum * rate) + transferFee;
     } else {
-      // บาท -> หยวน: (ยอดบาท - ค่าธรรมเนียม) / เรท
       finalResult = Math.max(0, (inputNum - transferFee) / rate);
     }
 
@@ -53,7 +72,7 @@ export default function HeroSection() {
       fee: transferFee,
       resultValue: finalResult
     };
-  }, [amount, transferType, calculationMode]);
+  }, [amount, transferType, calculationMode, rates]); // 👈 เพิ่ม rates ใน dependency
 
   return (
     <section className="relative w-full h-auto min-h-screen bg-[#0a6afc] flex items-center py-20 md:py-32 overflow-hidden font-sans text-left">
@@ -85,7 +104,6 @@ export default function HeroSection() {
         <div className="flex flex-col items-center lg:items-end w-full gap-5">
           <div className="bg-slate-50 p-4 md:p-8 rounded-[40px] shadow-2xl w-full max-w-[440px] border border-white/50 relative">
             
-            {/* 📑 Tab Switcher */}
             <div className="flex bg-slate-200/50 p-1.5 rounded-2xl mb-6 gap-1">
               <button 
                 onClick={() => { setCalculationMode('CNYtoTHB'); setAmount('1000'); }}
@@ -119,7 +137,6 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Input Area */}
               <div className="bg-white p-5 rounded-2xl border-2 border-slate-100 shadow-sm transition-all focus-within:border-blue-200">
                 <label className="text-[10px] text-slate-400 font-bold block mb-1 uppercase tracking-widest text-left">
                   {calculationMode === 'CNYtoTHB' ? 'ระบุยอดหยวน (CNY)' : 'ระบุยอดบาท (THB)'}
@@ -137,14 +154,12 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Middle Icon */}
               <div className="flex justify-center -my-2 relative z-10">
                 <div className="bg-white p-2 rounded-full shadow-md border-4 border-slate-50 text-blue-600">
                   <ArrowRightLeft size={16} />
                 </div>
               </div>
 
-              {/* Result Area */}
               <div className="bg-blue-600 p-6 rounded-3xl shadow-lg relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform pointer-events-none">
                     <RefreshCw size={60} />
@@ -162,7 +177,6 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Dynamic Info */}
               <div className="space-y-3 pt-1">
                 <div className="flex justify-between items-center px-2">
                   <div className="flex flex-col">
@@ -177,11 +191,11 @@ export default function HeroSection() {
                   )}
                 </div>
                 
-                {/* 📝 โน้ตด้านล่าง */}
                 <div className="bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50 space-y-2">
                   <div className="flex items-start gap-2 text-[11px] text-blue-700 font-bold leading-relaxed">
                     <Info size={14} className="shrink-0 mt-0.5" />
-                    <p>ยอดต่ำกว่า 1,000 หยวน มีค่าบริการ 50 บาท/รายการ</p>
+                    {/* 4. เปลี่ยนข้อความให้ดึงค่าจาก State อัตโนมัติ */}
+                    <p>ยอดต่ำกว่า {rates.minFeeThreshold.toLocaleString()} หยวน มีค่าบริการ {rates.feeAmount} บาท/รายการ</p>
                   </div>
                   <div className="flex items-start gap-2 text-[11px] text-slate-500 font-medium leading-relaxed italic">
                     <MessageCircle size={14} className="shrink-0 mt-0.5 text-green-500" />
