@@ -45,7 +45,7 @@ export default function AdminPage() {
     if (password === 'admin1234') {
       setIsLoggedIn(true);
     } else {
-      alert('รหัสผ่านไม่ถูกต้อง... ลองใหม่อีกครั้งนะปัง');
+      alert('รหัสผ่านไม่ถูกต้อง... ลองใหม่อีกครั้งนะ');
     }
   };
 
@@ -55,7 +55,7 @@ export default function AdminPage() {
     const hasEmptyField = Object.values(rates).some(value => value === '');
     
     if (hasEmptyField) {
-      alert('⚠️ ห้ามปล่อยช่องว่างน่อปัง! กรุณากรอกตัวเลขให้ครบทุกช่อง');
+      alert('⚠️ ห้ามปล่อยช่องว่าง! กรุณากรอกตัวเลขให้ครบทุกช่อง');
       return;
     }
 
