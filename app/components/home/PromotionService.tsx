@@ -3,7 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 
 export default function PromotionService() {
-  const lineLink = "https://line.me/R/ti/p/@yuanexchange"; 
+  const lineLink = "https://lin.ee/XiJIx4F"; 
 
   const services = [
     { name: 'เช็คเรทเงิน', icon: '/icons/calc.webp' },

@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const lineLink = "https://line.me/R/ti/p/@yuanexchange";
+  const lineLink = "https://lin.ee/XiJIx4F"; // 🚩 ลิงค์ไลน์
   const facebookLink = "https://www.facebook.com/share/1D3fHYY9EX/";
 
   // 📝 รายการเมนูหน้าบ้าน (ไม่มี Admin แล้วน่อ)

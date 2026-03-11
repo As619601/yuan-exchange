@@ -44,7 +44,7 @@ export default function HeroSection() {
     fetchLiveRates();
   }, []);
 
-  const lineLink = "https://line.me/R/ti/p/@yuanexchange";
+  const lineLink = "https://lin.ee/XiJIx4F";
 
   const { currentRate, fee, resultValue } = useMemo(() => {
     const inputNum = Number(amount) || 0;

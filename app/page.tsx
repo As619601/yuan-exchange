@@ -31,7 +31,7 @@ export default function Home() {
         
         {/* 💚 ปุ่ม Line - ใหญ่สะใจ p-0 */}
         <a 
-          href="https://line.me/R/ti/p/@yuanexchange" 
+          href="https://lin.ee/XiJIx4F" 
           target="_blank" 
           rel="noopener noreferrer"
           className="group relative flex items-center justify-center w-24 h-24 md:w-32 md:h-32 transition-all duration-500 animate-float drop-shadow-2xl"

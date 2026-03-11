@@ -3,7 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 
 export default function OurServices() {
-  const lineLink = "https://line.me/R/ti/p/@yuanexchange"; // 🚩 ลิงค์ไลน์
+  const lineLink = "https://lin.ee/XiJIx4F"; // 🚩 ลิงค์ไลน์
 
   const serviceCards = [
     { id: 2, image: '/images/service-2.jpg', title: 'รีวิวจากลูกค้า' },
