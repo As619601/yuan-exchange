@@ -3,7 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 
 export default function OurServices() {
-  const lineLink = "https://lin.ee/XiJIx4F"; // 🚩 ลิงค์ไลน์
+  const lineLink = "https://lin.ee/XiJIx4F"; 
 
   const serviceCards = [
     { id: 2, image: '/images/service-2.jpg', title: 'รีวิวจากลูกค้า' },
@@ -13,7 +13,8 @@ export default function OurServices() {
   ];
 
   return (
-    <section className="bg-white py-20 px-6">
+    // 🚩 มากิจัดการซ่อนที่นี่: hidden (ซ่อนในมือถือ) lg:block (แสดงในคอม)
+    <section className="hidden lg:block bg-white py-20 px-6">
       <div className="max-w-7xl mx-auto text-center">
         
         {/* 🏷️ Header Section */}
@@ -30,7 +31,6 @@ export default function OurServices() {
         {/* 🃏 Service Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {serviceCards.map((card) => (
-            /* 🚩 มากิเปลี่ยน div เป็น Tag <a> เพื่อให้คลิกได้ทั้งการ์ดเลยน่อปัง */
             <a 
               key={card.id} 
               href={lineLink}
@@ -38,7 +38,6 @@ export default function OurServices() {
               rel="noopener noreferrer"
               className="bg-white rounded-[40px] shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 group block cursor-pointer"
             >
-              {/* Image Container */}
               <div className="relative aspect-[4/5] w-full overflow-hidden">
                 <Image
                   src={card.image}
@@ -46,11 +45,9 @@ export default function OurServices() {
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                {/* 💡 มากิแถม Overlay จางๆ ตอน Hover  */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
               </div>
 
-              {/* Footer / Button Area */}
               <div className="p-8 flex flex-col items-center gap-4">
                 <span className="text-[#1a3a8a] font-bold text-lg">{card.title}</span>
                 <div className="w-20 h-8 bg-[#4b7deb] group-hover:bg-[#00d632] rounded-full transition-colors flex items-center justify-center">

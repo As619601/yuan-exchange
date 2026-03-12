@@ -36,7 +36,8 @@ export default function TrustSection() {
   ];
 
   return (
-    <section className="relative w-full overflow-hidden bg-white">
+    // 🚩 มากิเติมเวทมนตร์ตรงนี้: hidden (ซ่อนในมือถือ) และ lg:block (แสดงในคอม)
+    <section className="hidden lg:block relative w-full overflow-hidden bg-white">
       <div className="bg-[#1266ec] py-16 px-6 lg:py-24 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20">
         
         {/* 📱 ฝั่งซ้าย: QR Card */}
@@ -112,8 +113,6 @@ export default function TrustSection() {
           </div>
         </div>
       </div>
-
-      
     </section>
   );
 }

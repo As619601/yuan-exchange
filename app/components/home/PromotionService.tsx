@@ -16,7 +16,8 @@ export default function PromotionService() {
   ];
 
   return (
-    <section className="relative bg-[#f0f2f5] py-20 md:py-40 px-0 overflow-hidden">
+    // 🚩 มากิปรับตรงนี้เนี้ย: เพิ่ม hidden (ซ่อน) และ lg:block (โชว์เฉพาะจอคอม)
+    <section className="hidden lg:block relative bg-[#f0f2f5] py-20 md:py-40 px-0 overflow-hidden">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center lg:items-end">
         
         {/* 🟦 ฝั่งซ้าย: การ์ดโปรโมชัน */}
@@ -32,7 +33,7 @@ export default function PromotionService() {
             </p>      
           </div>
 
-          {/* ส่วนล่าง: Service Icons Grid (🚩 ปรับขนาดไอคอนตรงนี้เลยน่อ) */}
+          {/* ส่วนล่าง: Service Icons Grid */}
           <div className="bg-white py-12 md:py-20 px-4 md:px-12">
             <div className="grid grid-cols-4 md:grid-cols-7 gap-6 md:gap-10 justify-items-center">
               {services.map((item, index) => (
@@ -43,12 +44,10 @@ export default function PromotionService() {
                   rel="noopener noreferrer"
                   className="flex flex-col items-center gap-4 group cursor-pointer transition-all hover:-translate-y-3"
                 >
-                  {/* 🚩 มากิขยายขนาดที่นี่น่อ: จอคอมปรับเป็น w-28 h-28 */}
                   <div className="w-18 h-18 md:w-28 md:h-28 bg-white rounded-full border border-slate-100 shadow-sm flex items-center justify-center group-hover:border-blue-500 group-hover:shadow-xl group-hover:rotate-3 transition-all duration-300 overflow-hidden">
                     <img 
                       src={item.icon} 
                       alt={item.name} 
-                      /* 🚩 รูปข้างในก็ใหญ่ขึ้นตามน่อ */
                       className="w-15 h-15 md:w-20 md:h-20 object-contain transition-transform group-hover:scale-110"
                     />
                   </div>
@@ -62,7 +61,7 @@ export default function PromotionService() {
         </div>
 
         {/* 👩‍💼 พรีเซนเตอร์ */}
-        <div className="hidden lg:block absolute right-[-149px] bottom-[-50px] z-5 pointer-events-none">
+        <div className="absolute right-[-149px] bottom-[-50px] z-5 pointer-events-none">
           <div className="relative w-[800px] h-[900px]"> 
             <Image 
               src="/images/presenter02.png" 
