@@ -10,9 +10,10 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 export default function ReviewSection() {
+  // 📸 ฟิกลำดับรูปภาพ 1-15
   const reviewImages = Array.from({ length: 15 }, (_, i) => `/reviews/Review${i + 1}.jpg`);
 
-  // 🚩 ลิงค์ต่างๆ ที่ปังให้มาน่อ
+  // 🚩 ลิงค์ติดต่อ (อัปเดตตามที่ปังให้มาน่อ)
   const links = {
     line: "https://lin.ee/XiJIx4F",
     facebook: "https://www.facebook.com/share/1D3fHYY9EX/",
@@ -95,7 +96,7 @@ export default function ReviewSection() {
           </div>
         </div>
 
-        {/* 4. Contact Footer (🚩 มากิใส่ลิงค์ให้ครบแล้วน่อ) */}
+        {/* 4. Contact Footer */}
         <div className="pt-8 space-y-4">
            <h3 className="text-white font-bold text-lg">ช่องทาง ติดต่อ</h3>
            <div className="flex justify-center gap-4">
@@ -111,14 +112,14 @@ export default function ReviewSection() {
   );
 }
 
-// 🚩 ฟังก์ชัน SocialIcon แบบใหม่ที่กดลิงค์ได้และรูปใหญ่ขึ้น
+// 🚩 ฟังก์ชัน SocialIcon: แก้ไข p-1.5 เพื่อให้รูปใหญ่ขึ้น และรองรับลิงค์
 function SocialIcon({ color, icon, link }: { color: string, icon: string, link: string }) {
   return (
     <a 
       href={link} 
       target="_blank" 
       rel="noopener noreferrer"
-      className={`${color} w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg active:scale-95 transition-transform p[2]`}
+      className={`${color} w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg active:scale-95 transition-transform p-1.5`}
     >
       <img src={icon} alt="social" className="w-full h-full object-contain" />
     </a>

@@ -1,9 +1,10 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
-import { Phone, MessageCircle } from 'lucide-react';
+import { Phone, MessageCircle, Facebook } from 'lucide-react';
 
 export default function Footer() {
+  // 🚩 รวมลิงค์ไว้ที่เดียวเพื่อให้แก้สะดวกรวดเร็วน่อปัง
   const lineLink = "https://lin.ee/XiJIx4F"; 
   const phoneNumber = "0839854714";
   const facebookLink = "https://www.facebook.com/share/1D3fHYY9EX/";
@@ -29,18 +30,21 @@ export default function Footer() {
             ด้วยระบบที่ทันสมัยและทีมงานมืออาชีพ มั่นคง ปลอดภัย 100%
           </p>
           <div className="flex gap-4">
-            <a href={`tel:${phoneNumber}`} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#3b82f6] transition-colors">
+            <a href={`tel:${phoneNumber}`} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#3b82f6] transition-colors shadow-lg active:scale-90">
               <Phone size={18} />
             </a>
-            <a href={lineLink} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#00d632] transition-colors">
+            <a href={lineLink} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#00d632] transition-colors shadow-lg active:scale-90">
               <MessageCircle size={18} />
+            </a>
+            <a href={facebookLink} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#1877F2] transition-colors shadow-lg active:scale-90">
+              <Facebook size={18} />
             </a>
           </div>
         </div>
 
-        {/* 2. คอลัมน์เมนูหลัก (🚩 มากิใส่ hidden lg:flex เพื่อซ่อนในมือถือแล้วน่อ) */}
+        {/* 2. คอลัมน์เมนูหลัก (🚩 ซ่อนในมือถือเพื่อความกระชับน่อ) */}
         <div className="hidden lg:flex flex-col gap-6 lg:pl-10 text-left">
-          <h4 className="text-lg font-black tracking-tight">เมนูหลัก</h4>
+          <h4 className="text-lg font-black tracking-tight text-blue-400">เมนูหลัก</h4>
           <ul className="flex flex-col gap-4 text-sm font-medium opacity-70">
             <li><a href={homeLink} className="hover:text-[#3b82f6] transition-colors cursor-pointer">หน้าแรก</a></li>
             <li><a href={lineLink} target="_blank" rel="noopener noreferrer" className="hover:text-[#3b82f6] transition-colors cursor-pointer">บริการของเรา</a></li>
@@ -52,28 +56,30 @@ export default function Footer() {
 
         {/* 3. คอลัมน์ติดต่อเรา */}
         <div className="flex flex-col gap-6 text-left">
-          <h4 className="text-lg font-black tracking-tight">ติดต่อเรา</h4>
+          <h4 className="text-lg font-black tracking-tight text-blue-400">ติดต่อเรา</h4>
           <ul className="flex flex-col gap-5 text-sm font-medium">
             <li className="flex items-center gap-3">
               <a href={`tel:${phoneNumber}`} className="flex items-center gap-3 group">
-                <Phone size={20} className="text-[#3b82f6] shrink-0 group-hover:scale-110 transition-transform" />
+                <div className="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center group-hover:bg-[#3b82f6] transition-all">
+                   <Phone size={16} className="text-[#3b82f6] group-hover:text-white shrink-0 transition-colors" />
+                </div>
                 <span className="opacity-70 group-hover:opacity-100 group-hover:text-[#3b82f6] transition-all">083-985-4714</span>
               </a>
             </li>
             <li className="flex items-center gap-3">
               <a href={lineLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group">
-                <div className="w-5 h-5 bg-[#3b82f6] group-hover:bg-[#00d632] rounded-full flex items-center justify-center transition-colors">
-                  <span className="text-[10px] font-bold text-white">L</span>
+                <div className="w-8 h-8 bg-[#00d632]/10 rounded-full flex items-center justify-center group-hover:bg-[#00d632] transition-all">
+                  <span className="text-[10px] font-black text-[#00d632] group-hover:text-white">LINE</span>
                 </div>
-                <span className="opacity-70 font-bold underline group-hover:text-[#00d632] transition-all tracking-wide text-left">Line ID: @yuanexchange</span>
+                <span className="opacity-70 font-bold underline group-hover:text-[#00d632] transition-all tracking-wide">@yuanexchange</span>
               </a>
             </li>
             <li className="flex items-center gap-3">
               <a href={facebookLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group">
-                <div className="w-5 h-5 bg-[#3b82f6] group-hover:bg-[#00d632] rounded-full flex items-center justify-center transition-colors">
-                  <span className="text-[10px] font-bold text-white">FB</span>
+                <div className="w-8 h-8 bg-[#1877F2]/10 rounded-full flex items-center justify-center group-hover:bg-[#1877F2] transition-all">
+                  <Facebook size={14} className="text-[#1877F2] group-hover:text-white transition-colors" />
                 </div>
-                <span className="opacity-70 font-bold underline group-hover:text-[#00d632] transition-all tracking-wide text-left">Facebook: Yuan Exchange </span>
+                <span className="opacity-70 font-bold underline group-hover:text-[#1877F2] transition-all tracking-wide">Yuan Exchange</span>
               </a>
             </li>
           </ul>
@@ -81,11 +87,11 @@ export default function Footer() {
 
         {/* 4. คอลัมน์เวลาทำการ */}
         <div className="flex flex-col gap-6 text-left">
-          <h4 className="text-lg font-black tracking-tight">เวลาทำการ</h4>
+          <h4 className="text-lg font-black tracking-tight text-blue-400">เวลาทำการ</h4>
           <ul className="flex flex-col gap-4 text-sm font-medium">
-            <li className="flex justify-between items-center"><span className="opacity-60">จันทร์ - ศุกร์:</span><span className="font-bold tracking-wider">09:00 - 18:00</span></li>
-            <li className="flex justify-between items-center"><span className="opacity-60">เสาร์:</span><span className="font-bold tracking-wider">10:00 - 16:00</span></li>
-            <li className="flex justify-between items-center"><span className="opacity-60">อาทิตย์:</span><span className="text-red-500 font-black">ปิดทำการ</span></li>
+            <li className="flex justify-between items-center bg-white/5 p-2 rounded-lg"><span className="opacity-60">จันทร์ - ศุกร์:</span><span className="font-bold tracking-wider">09:00 - 18:00</span></li>
+            <li className="flex justify-between items-center bg-white/5 p-2 rounded-lg"><span className="opacity-60">เสาร์:</span><span className="font-bold tracking-wider">10:00 - 16:00</span></li>
+            <li className="flex justify-between items-center p-2"><span className="opacity-60">อาทิตย์:</span><span className="text-red-500 font-black px-2 py-0.5 bg-red-500/10 rounded">ปิดทำการ</span></li>
           </ul>
         </div>
 
